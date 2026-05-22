@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Calculadora ITBIS RD 18% | CalculaRD</title>
+    <meta name="description" content="Calcula el ITBIS 18% en República Dominicana: agrega o extrae el impuesto de un precio.">
+    <meta name="theme-color" content="#0d1117">
+    <meta property="og:title" content="Calculadora ITBIS RD 18%">
+    <meta property="og:description" content="Agrega o extrae ITBIS de un precio en segundos.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="/og-image.svg">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="canonical" href="https://calculard.com/itbis.html">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav" aria-label="Principal">
+        <a class="brand" href="/">
+          <span class="brand-mark">RD</span>
+          <span>CalculaRD</span>
+        </a>
+        <div class="nav-links">
+          <a href="/prestamos.html">Préstamos</a>
+          <a href="/itbis.html">ITBIS</a>
+          <a href="/sueldo.html">Sueldo</a>
+          <a href="/vehiculos.html">Vehículos</a>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <section class="page-intro">
+        <p class="eyebrow">Calculadora ITBIS RD</p>
+        <h1>Agrega o extrae el ITBIS de un precio.</h1>
+        <p>Usa la tasa general de 18% para estimar base imponible, impuesto y total.</p>
+      </section>
+      <section class="single-calculator">
+        <article class="calculator-card" id="itbis">
+          <div class="card-heading">
+            <p>ITBIS</p>
+            <h2>Agregar o extraer 18%</h2>
+          </div>
+          <form class="calc-form" data-calculator="itbis">
+            <label>
+              <span>Precio</span>
+              <input name="price" type="number" min="0" step="100" value="10000">
+            </label>
+            <label>
+              <span>Modo</span>
+              <select name="mode">
+                <option value="add">Precio sin ITBIS</option>
+                <option value="extract">Precio con ITBIS incluido</option>
+              </select>
+            </label>
+          </form>
+          <div class="results" data-results="itbis"></div>
+        </article>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <p>Fuente: DGII. Cálculo estimado con tasa general de ITBIS de 18%.</p>
+    </footer>
+    <script src="script.js"></script>
+  </body>
+</html>

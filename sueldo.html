@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Calculadora sueldo neto RD 2026 | CalculaRD</title>
+    <meta name="description" content="Calcula sueldo neto en República Dominicana con AFP, SFS e ISR estimado según escala DGII 2026.">
+    <meta name="theme-color" content="#0d1117">
+    <meta property="og:title" content="Calculadora sueldo neto RD 2026">
+    <meta property="og:description" content="Estima AFP, SFS, ISR y salario neto mensual en RD.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="/og-image.svg">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="canonical" href="https://calculard.com/sueldo.html">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav" aria-label="Principal">
+        <a class="brand" href="/">
+          <span class="brand-mark">RD</span>
+          <span>CalculaRD</span>
+        </a>
+        <div class="nav-links">
+          <a href="/prestamos.html">Préstamos</a>
+          <a href="/itbis.html">ITBIS</a>
+          <a href="/sueldo.html">Sueldo</a>
+          <a href="/vehiculos.html">Vehículos</a>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <section class="page-intro">
+        <p class="eyebrow">Calculadora sueldo RD</p>
+        <h1>Estima tu sueldo neto mensual.</h1>
+        <p>Calcula AFP, SFS, ISR mensual estimado y lo que recibirías luego de descuentos.</p>
+      </section>
+      <section class="single-calculator">
+        <article class="calculator-card" id="sueldo">
+          <div class="card-heading">
+            <p>Sueldo RD</p>
+            <h2>Sueldo neto estimado</h2>
+          </div>
+          <form class="calc-form" data-calculator="salary">
+            <label>
+              <span>Salario mensual bruto</span>
+              <input name="salary" type="number" min="0" step="1000" value="75000">
+            </label>
+          </form>
+          <div class="results" data-results="salary"></div>
+          <p class="note">ISR estimado con escala anual DGII 2026 luego de AFP y SFS.</p>
+        </article>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <p>Cálculo estimado. Valida descuentos finales con tu empleador o asesor fiscal.</p>
+    </footer>
+    <script src="script.js"></script>
+  </body>
+</html>
