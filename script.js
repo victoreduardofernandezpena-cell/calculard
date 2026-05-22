@@ -30,6 +30,7 @@ const BANK_RATES = [
 
 const HISTORY_KEY = "calculard_quote_history";
 const DEALER_KEY = "calculard_dealer_profile";
+let showFullAmortization = false;
 
 function money(value) {
   return MONEY_FORMATTER.format(Number.isFinite(value) ? value : 0);
@@ -292,9 +293,11 @@ function renderBankTable(quote) {
 
 function renderAmortizationTable(quote) {
   const target = document.querySelector("[data-amortization-table]");
+  const toggle = document.querySelector("[data-toggle-amortization]");
   if (!target) return;
 
-  target.innerHTML = buildAmortization(quote.financed, quote.bank.rate, quote.years)
+  const monthsToShow = showFullAmortization ? quote.years * 12 : 6;
+  target.innerHTML = buildAmortization(quote.financed, quote.bank.rate, quote.years, monthsToShow)
     .map(
       (row) => `
         <tr>
@@ -307,6 +310,10 @@ function renderAmortizationTable(quote) {
       `
     )
     .join("");
+
+  if (toggle) {
+    toggle.textContent = showFullAmortization ? "Ver menos meses" : "Ver más meses";
+  }
 }
 
 function renderQuotePreview(quote) {
@@ -387,7 +394,12 @@ function renderHistory() {
 
   const history = readStorage(HISTORY_KEY, []);
   if (!history.length) {
-    target.innerHTML = `<p class="note">Aún no hay simulaciones guardadas.</p>`;
+    target.innerHTML = `
+      <div class="empty-state">
+        <strong>No hay simulaciones guardadas todavía</strong>
+        <span>Guarda una cotización para verla aquí durante la conversación con el cliente.</span>
+      </div>
+    `;
     return;
   }
 
@@ -408,6 +420,7 @@ function renderHistory() {
 
 function saveCurrentQuote() {
   const quote = getCommercialQuote();
+  const status = document.querySelector("[data-copy-status]");
   if (!quote) return;
 
   const history = readStorage(HISTORY_KEY, []);
@@ -424,6 +437,7 @@ function saveCurrentQuote() {
 
   writeStorage(HISTORY_KEY, nextHistory);
   renderHistory();
+  if (status) status.textContent = "Simulación guardada en el historial de este navegador.";
 }
 
 function updateCommercialDashboard() {
@@ -560,6 +574,25 @@ function initializeCommercialDashboard() {
   document.querySelector("[data-whatsapp-quote]")?.addEventListener("click", sendCurrentQuoteToWhatsapp);
   document.querySelector("[data-save-image]")?.addEventListener("click", saveCurrentQuoteAsImage);
   document.querySelector("[data-print-quote]")?.addEventListener("click", () => window.print());
+  document.querySelector("[data-toggle-amortization]")?.addEventListener("click", () => {
+    showFullAmortization = !showFullAmortization;
+    updateCommercialDashboard();
+  });
+  document.querySelectorAll("[data-tab-button]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const tab = button.dataset.tabButton;
+
+      document.querySelectorAll("[data-tab-button]").forEach((item) => {
+        const isActive = item.dataset.tabButton === tab;
+        item.classList.toggle("active", isActive);
+        item.setAttribute("aria-selected", String(isActive));
+      });
+
+      document.querySelectorAll("[data-tab-panel]").forEach((panel) => {
+        panel.classList.toggle("active", panel.dataset.tabPanel === tab);
+      });
+    });
+  });
   document.querySelectorAll("[data-preset]").forEach((button) => {
     button.addEventListener("click", () => {
       const [downPaymentPercent, years] = button.dataset.preset.split(":").map(Number);

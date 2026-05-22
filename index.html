@@ -78,14 +78,17 @@
         </div>
         <div class="quick-panel" aria-label="Resumen">
           <div>
+            <i aria-hidden="true">C</i>
             <span>Para vendedores</span>
             <strong>Cotiza</strong>
           </div>
           <div>
+            <i aria-hidden="true">B</i>
             <span>Comparador</span>
             <strong>Bancos</strong>
           </div>
           <div>
+            <i aria-hidden="true">H</i>
             <span>Historial</span>
             <strong>Local</strong>
           </div>
@@ -105,6 +108,7 @@
         <div class="dashboard-layout">
           <aside class="settings-panel">
             <div class="card-heading">
+              <span class="section-icon" aria-hidden="true">D</span>
               <p>Branding</p>
               <h2>Datos del negocio</h2>
             </div>
@@ -141,6 +145,7 @@
 
           <article class="quote-builder">
             <div class="card-heading">
+              <span class="section-icon" aria-hidden="true">Q</span>
               <p>Simulación</p>
               <h2>Cotización de financiamiento</h2>
             </div>
@@ -204,6 +209,7 @@
         <div class="dashboard-layout lower">
           <article class="data-panel">
             <div class="card-heading">
+              <span class="section-icon" aria-hidden="true">T</span>
               <p>Comparador</p>
               <h2>Tasas referenciales</h2>
             </div>
@@ -247,23 +253,36 @@
           </article>
         </div>
 
-        <div class="dashboard-layout lower">
-          <article class="data-panel wide">
-            <div class="card-heading">
-              <p>Tabla de amortización</p>
-              <h2>Primeros 12 meses</h2>
-            </div>
-            <div class="chart-panel" aria-label="Resumen visual">
-              <div class="donut-chart" data-donut-chart>
-                <span data-donut-label>0%</span>
+        <article class="data-panel finance-panel">
+          <div class="card-heading">
+            <span class="section-icon" aria-hidden="true">A</span>
+            <p>Panel financiero</p>
+            <h2>Resumen, amortización e historial</h2>
+          </div>
+
+          <div class="tab-list" role="tablist" aria-label="Panel financiero">
+            <button class="active" type="button" role="tab" aria-selected="true" data-tab-button="summary">Resumen</button>
+            <button type="button" role="tab" aria-selected="false" data-tab-button="amortization">Amortización</button>
+            <button type="button" role="tab" aria-selected="false" data-tab-button="history">Historial</button>
+          </div>
+
+          <div class="tab-panel active" role="tabpanel" data-tab-panel="summary">
+            <div class="summary-grid">
+              <div class="chart-panel" aria-label="Resumen visual">
+                <div class="donut-chart" data-donut-chart>
+                  <span data-donut-label>0%</span>
+                </div>
+                <div class="chart-legend">
+                  <div><span class="legend-dot capital"></span>Capital financiado</div>
+                  <div><span class="legend-dot interest"></span>Intereses estimados</div>
+                </div>
               </div>
-              <div class="chart-legend">
-                <div><span class="legend-dot capital"></span>Capital financiado</div>
-                <div><span class="legend-dot interest"></span>Intereses estimados</div>
-              </div>
+              <div class="bar-chart" data-bar-chart aria-label="Amortización mensual"></div>
             </div>
-            <div class="bar-chart" data-bar-chart aria-label="Amortización mensual"></div>
-            <div class="table-wrap">
+          </div>
+
+          <div class="tab-panel" role="tabpanel" data-tab-panel="amortization">
+            <div class="table-wrap compact-table">
               <table>
                 <thead>
                   <tr>
@@ -277,21 +296,19 @@
                 <tbody data-amortization-table></tbody>
               </table>
             </div>
-          </article>
+            <button class="inline-action" type="button" data-toggle-amortization>Ver más meses</button>
+          </div>
 
-          <article class="data-panel">
-            <div class="card-heading">
-              <p>Historial</p>
-              <h2>Últimas simulaciones</h2>
-            </div>
+          <div class="tab-panel" role="tabpanel" data-tab-panel="history">
             <div class="history-list" data-history-list></div>
-          </article>
-        </div>
+          </div>
+        </article>
       </section>
 
       <section class="calculator-grid" aria-label="Calculadoras">
         <article class="calculator-card" id="prestamos">
           <div class="card-heading">
+            <span class="section-icon" aria-hidden="true">P</span>
             <p>Calculadora de préstamos</p>
             <h2>Cuota mensual</h2>
           </div>
@@ -314,6 +331,7 @@
 
         <article class="calculator-card" id="itbis">
           <div class="card-heading">
+            <span class="section-icon" aria-hidden="true">I</span>
             <p>Calculadora ITBIS</p>
             <h2>Agregar o extraer 18%</h2>
           </div>
@@ -335,6 +353,7 @@
 
         <article class="calculator-card" id="sueldo">
           <div class="card-heading">
+            <span class="section-icon" aria-hidden="true">S</span>
             <p>Calculadora sueldo RD</p>
             <h2>Sueldo neto estimado</h2>
           </div>
@@ -350,6 +369,7 @@
 
         <article class="calculator-card" id="vehiculos">
           <div class="card-heading">
+            <span class="section-icon" aria-hidden="true">V</span>
             <p>Calculadora de vehículos</p>
             <h2>Financiamiento de auto</h2>
           </div>

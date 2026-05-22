@@ -4,13 +4,18 @@
   --panel: #151b23;
   --panel-soft: #1d2530;
   --line: #2f3a49;
+  --line-soft: rgba(255, 255, 255, 0.09);
   --text: #f4f7fb;
   --muted: #aeb8c7;
   --accent: #2bd4a0;
   --accent-strong: #12b886;
   --gold: #f4c95d;
   --danger: #ff6b6b;
-  --shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+  --radius: 14px;
+  --radius-sm: 11px;
+  --shadow: 0 18px 50px rgba(0, 0, 0, 0.32);
+  --shadow-deep: 0 24px 80px rgba(0, 0, 0, 0.42);
+  --glow: 0 0 0 1px rgba(43, 212, 160, 0.16), 0 20px 70px rgba(43, 212, 160, 0.08);
 }
 
 * {
@@ -25,10 +30,24 @@ body {
   margin: 0;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background:
-    radial-gradient(circle at top left, rgba(43, 212, 160, 0.16), transparent 28rem),
-    linear-gradient(135deg, #0d1117 0%, #121820 54%, #0d1117 100%);
+    radial-gradient(circle at 12% 0%, rgba(43, 212, 160, 0.2), transparent 30rem),
+    radial-gradient(circle at 88% 14%, rgba(244, 201, 93, 0.08), transparent 24rem),
+    radial-gradient(circle at 50% 92%, rgba(43, 212, 160, 0.08), transparent 28rem),
+    linear-gradient(145deg, #090d13 0%, #111820 48%, #0b1017 100%);
   color: var(--text);
   letter-spacing: 0;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), transparent 72%);
 }
 
 body:not(.app-ready) {
@@ -84,8 +103,9 @@ a {
   top: 0;
   z-index: 10;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(13, 17, 23, 0.86);
-  backdrop-filter: blur(16px);
+  background: rgba(9, 13, 19, 0.72);
+  backdrop-filter: blur(22px) saturate(145%);
+  box-shadow: 0 12px 38px rgba(0, 0, 0, 0.18);
 }
 
 .nav {
@@ -111,10 +131,11 @@ a {
   place-items: center;
   width: 38px;
   height: 38px;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   color: #06120f;
   background: var(--accent);
   font-weight: 900;
+  box-shadow: 0 12px 34px rgba(43, 212, 160, 0.24);
 }
 
 .nav-links {
@@ -127,15 +148,17 @@ a {
 
 .nav-links a {
   padding: 10px 12px;
-  border-radius: 8px;
+  border-radius: 999px;
   color: var(--muted);
   font-size: 0.95rem;
+  transition: background 180ms ease, color 180ms ease, transform 180ms ease;
 }
 
 .nav-links a:hover,
 .nav-links a:focus {
   background: rgba(255, 255, 255, 0.08);
   color: var(--text);
+  transform: translateY(-1px);
 }
 
 main {
@@ -144,12 +167,12 @@ main {
 }
 
 .hero {
-  min-height: calc(100svh - 72px);
+  min-height: calc(100svh - 56px);
   display: grid;
   grid-template-columns: minmax(0, 1.12fr) minmax(280px, 0.6fr);
   align-items: center;
-  gap: 48px;
-  padding: 56px 0 76px;
+  gap: 64px;
+  padding: 86px 0 108px;
 }
 
 .hero-copy {
@@ -173,8 +196,8 @@ h2 {
 }
 
 h1 {
-  max-width: 760px;
-  font-size: clamp(2.75rem, 7vw, 5.8rem);
+  max-width: 820px;
+  font-size: clamp(3.2rem, 7.6vw, 6.4rem);
 }
 
 .hero-copy > p:not(.eyebrow) {
@@ -188,25 +211,27 @@ h1 {
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 30px;
+  gap: 14px;
+  margin-top: 34px;
 }
 
 .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 48px;
-  padding: 0 18px;
+  min-height: 52px;
+  padding: 0 20px;
   border: 1px solid transparent;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-weight: 800;
-  transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.22);
+  transition: transform 180ms ease, background 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
 }
 
 .button.primary {
   color: #06120f;
-  background: var(--accent);
+  background: linear-gradient(135deg, #6ff0c8, var(--accent));
+  box-shadow: 0 18px 44px rgba(43, 212, 160, 0.22);
 }
 
 .button.primary:hover {
@@ -216,12 +241,13 @@ h1 {
 
 .button.whatsapp {
   color: #06120f;
-  background: #25d366;
+  background: linear-gradient(135deg, #77f2a2, #25d366);
+  box-shadow: 0 18px 44px rgba(37, 211, 102, 0.18);
 }
 
 .button.secondary {
-  border-color: var(--line);
-  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--line-soft);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.035));
 }
 
 .quick-panel,
@@ -229,11 +255,14 @@ h1 {
 .settings-panel,
 .quote-builder,
 .data-panel {
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  background: rgba(21, 27, 35, 0.88);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.025)),
+    rgba(21, 27, 35, 0.86);
   box-shadow: var(--shadow);
-  transition: transform 200ms ease, border-color 200ms ease;
+  transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
+  backdrop-filter: blur(12px);
 }
 
 .calculator-card:hover,
@@ -250,23 +279,39 @@ h1 {
 .quote-builder:hover,
 .data-panel:hover {
   border-color: rgba(43, 212, 160, 0.28);
+  box-shadow: var(--shadow-deep), var(--glow);
 }
 
 .quick-panel {
   display: grid;
-  gap: 12px;
-  padding: 18px;
+  gap: 14px;
+  padding: 20px;
 }
 
 .quick-panel div {
-  display: flex;
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  min-height: 76px;
-  padding: 16px;
-  border-radius: 8px;
-  background: var(--panel-soft);
+  gap: 10px 14px;
+  min-height: 88px;
+  padding: 18px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-sm);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.025));
+}
+
+.quick-panel i,
+.section-icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  color: #07130f;
+  background: linear-gradient(135deg, #7cf4cf, var(--accent));
+  font-style: normal;
+  font-weight: 900;
+  box-shadow: 0 10px 24px rgba(43, 212, 160, 0.18);
 }
 
 .quick-panel span {
@@ -274,12 +319,13 @@ h1 {
 }
 
 .quick-panel strong {
+  grid-column: 2;
   font-size: 1.65rem;
 }
 
 .section-heading {
   max-width: 780px;
-  margin-bottom: 22px;
+  margin-bottom: 30px;
 }
 
 .section-heading h2 {
@@ -295,14 +341,14 @@ h1 {
 
 .dashboard {
   scroll-margin-top: 92px;
-  padding: 22px 0 28px;
+  padding: 48px 0 36px;
 }
 
 .dashboard-layout {
   display: grid;
   grid-template-columns: minmax(260px, 0.58fr) minmax(0, 1.42fr);
-  gap: 18px;
-  margin-bottom: 18px;
+  gap: 22px;
+  margin-bottom: 22px;
 }
 
 .dashboard-layout.lower {
@@ -312,11 +358,15 @@ h1 {
 .settings-panel,
 .quote-builder,
 .data-panel {
-  padding: 22px;
+  padding: 26px;
 }
 
 .data-panel.wide {
   min-width: 0;
+}
+
+.finance-panel {
+  margin-bottom: 28px;
 }
 
 .calc-form.stacked {
@@ -332,10 +382,11 @@ h1 {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-top: 18px;
-  padding: 14px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.045);
+  margin-top: 20px;
+  padding: 16px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .dealer-logo {
@@ -345,7 +396,7 @@ h1 {
   width: 52px;
   height: 52px;
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   color: #06120f;
   background: var(--accent);
   font-weight: 900;
@@ -376,24 +427,25 @@ h1 {
 .action-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 18px;
+  gap: 14px;
+  margin-top: 22px;
 }
 
 .quick-presets {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin: 18px 0 22px;
+  gap: 12px;
+  margin: 20px 0 24px;
 }
 
 .quick-presets button {
   min-height: 38px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 0 12px;
+  border: 1px solid var(--line-soft);
+  border-radius: 999px;
+  padding: 0 14px;
   color: var(--text);
-  background: rgba(255, 255, 255, 0.045);
+  background: rgba(255, 255, 255, 0.055);
+  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
   font: inherit;
   font-size: 0.88rem;
   font-weight: 800;
@@ -402,6 +454,8 @@ h1 {
 
 .quick-presets button:hover {
   border-color: rgba(43, 212, 160, 0.42);
+  background: rgba(43, 212, 160, 0.08);
+  transform: translateY(-1px);
 }
 
 .action-row button {
@@ -411,7 +465,13 @@ h1 {
 .table-wrap {
   overflow-x: auto;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
+  background: rgba(7, 12, 18, 0.24);
+}
+
+.compact-table {
+  max-height: 330px;
+  overflow: auto;
 }
 
 table {
@@ -429,13 +489,22 @@ td {
 }
 
 th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
   color: var(--muted);
+  background: #121922;
   font-size: 0.78rem;
   text-transform: uppercase;
 }
 
 td {
   color: var(--text);
+  font-size: 0.92rem;
+}
+
+tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.025);
 }
 
 tbody tr:last-child td {
@@ -448,6 +517,7 @@ tbody tr:last-child td {
   gap: 18px;
   background: #f8fafc;
   color: #101820;
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.22);
 }
 
 .quote-preview .quote-brand {
@@ -517,7 +587,7 @@ tbody tr:last-child td {
 
 .chart-panel {
   display: grid;
-  grid-template-columns: 150px minmax(0, 1fr);
+  grid-template-columns: 190px minmax(0, 1fr);
   align-items: center;
   gap: 18px;
   margin-bottom: 18px;
@@ -528,7 +598,7 @@ tbody tr:last-child td {
   position: relative;
   display: grid;
   place-items: center;
-  width: 132px;
+  width: 168px;
   aspect-ratio: 1;
   border-radius: 50%;
   background: conic-gradient(var(--gold) 0 var(--interest), var(--accent) var(--interest) 100%);
@@ -537,7 +607,7 @@ tbody tr:last-child td {
 .donut-chart::after {
   content: "";
   position: absolute;
-  inset: 18px;
+  inset: 22px;
   border-radius: 50%;
   background: var(--panel);
 }
@@ -545,7 +615,7 @@ tbody tr:last-child td {
 .donut-chart span {
   position: relative;
   z-index: 1;
-  font-size: 1.45rem;
+  font-size: 1.75rem;
   font-weight: 900;
 }
 
@@ -600,6 +670,7 @@ tbody tr:last-child td {
 
 .bar-track i {
   display: block;
+  transition: width 240ms ease;
 }
 
 .bar-capital {
@@ -613,6 +684,82 @@ tbody tr:last-child td {
 .history-list {
   display: grid;
   gap: 10px;
+}
+
+.empty-state {
+  display: grid;
+  gap: 8px;
+  place-items: center;
+  min-height: 190px;
+  padding: 24px;
+  border: 1px dashed rgba(43, 212, 160, 0.32);
+  border-radius: var(--radius);
+  color: var(--muted);
+  text-align: center;
+  background: rgba(43, 212, 160, 0.045);
+}
+
+.empty-state strong {
+  color: var(--text);
+  font-size: 1.05rem;
+}
+
+.tab-list {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 22px;
+  padding: 6px;
+  border: 1px solid var(--line-soft);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.tab-list button,
+.inline-action {
+  min-height: 40px;
+  border: 0;
+  border-radius: 999px;
+  padding: 0 16px;
+  color: var(--muted);
+  background: transparent;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  transition: color 160ms ease, background 160ms ease, transform 160ms ease;
+}
+
+.tab-list button:hover,
+.inline-action:hover {
+  color: var(--text);
+  transform: translateY(-1px);
+}
+
+.tab-list button.active {
+  color: #06120f;
+  background: linear-gradient(135deg, #6ff0c8, var(--accent));
+}
+
+.tab-panel {
+  display: none;
+}
+
+.tab-panel.active {
+  display: block;
+  animation: result-rise 220ms ease both;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.7fr) minmax(320px, 1fr);
+  gap: 22px;
+  align-items: center;
+}
+
+.inline-action {
+  margin-top: 14px;
+  border: 1px solid var(--line-soft);
+  background: rgba(255, 255, 255, 0.055);
 }
 
 .history-item {
@@ -636,8 +783,8 @@ tbody tr:last-child td {
 .calculator-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
-  padding: 22px 0 64px;
+  gap: 22px;
+  padding: 44px 0 78px;
 }
 
 .page-intro {
@@ -665,21 +812,30 @@ tbody tr:last-child td {
 .calculator-card {
   scroll-margin-top: 92px;
   min-height: 520px;
-  padding: 24px;
+  padding: 28px;
 }
 
 .card-heading {
-  margin-bottom: 22px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0 12px;
+  align-items: center;
+  margin-bottom: 24px;
 }
 
 .card-heading h2 {
+  grid-column: 2;
   font-size: clamp(1.55rem, 3vw, 2.15rem);
+}
+
+.card-heading .section-icon + p {
+  margin-bottom: 0;
 }
 
 .calc-form {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
+  gap: 18px;
 }
 
 .calc-form label:first-child,
@@ -689,7 +845,7 @@ tbody tr:last-child td {
 
 label {
   display: grid;
-  gap: 8px;
+  gap: 9px;
   color: var(--muted);
   font-weight: 700;
   font-size: 0.9rem;
@@ -698,13 +854,17 @@ label {
 input,
 select {
   width: 100%;
-  min-height: 48px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 0 12px;
+  min-height: 54px;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-sm);
+  padding: 0 14px;
   color: var(--text);
-  background: #0f141b;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.015)),
+    #0f141b;
   font: inherit;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease, transform 160ms ease;
 }
 
 select option {
@@ -716,6 +876,8 @@ input:focus,
 select:focus {
   outline: 2px solid rgba(43, 212, 160, 0.42);
   border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(43, 212, 160, 0.09), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transform: translateY(-1px);
 }
 
 input[type="file"] {
@@ -724,8 +886,8 @@ input[type="file"] {
 
 .results {
   display: grid;
-  gap: 10px;
-  margin-top: 22px;
+  gap: 12px;
+  margin-top: 24px;
 }
 
 .result-row {
@@ -733,11 +895,24 @@ input[type="file"] {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  min-height: 56px;
-  padding: 12px 14px;
+  min-height: 62px;
+  padding: 14px 16px;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.045);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.05);
+  animation: result-rise 220ms ease both;
+}
+
+@keyframes result-rise {
+  from {
+    opacity: 0.72;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .result-row span {
@@ -752,6 +927,7 @@ input[type="file"] {
 .result-row.highlight {
   border-color: rgba(43, 212, 160, 0.4);
   background: rgba(43, 212, 160, 0.1);
+  box-shadow: 0 14px 34px rgba(43, 212, 160, 0.08);
 }
 
 .result-row.warning strong {
@@ -790,13 +966,15 @@ input[type="file"] {
   .hero,
   .calculator-grid,
   .dashboard-layout,
-  .dashboard-layout.lower {
+  .dashboard-layout.lower,
+  .summary-grid {
     grid-template-columns: 1fr;
   }
 
   .hero {
     min-height: auto;
-    padding-top: 42px;
+    gap: 28px;
+    padding: 52px 0 58px;
   }
 
   .calculator-card {
@@ -805,11 +983,17 @@ input[type="file"] {
 }
 
 @media (max-width: 640px) {
+  main,
+  .nav,
+  .site-footer {
+    width: min(100% - 24px, 1180px);
+  }
+
   .nav {
     align-items: flex-start;
     flex-direction: column;
     padding: 14px 0;
-    gap: 12px;
+    gap: 14px;
   }
 
   .nav-links {
@@ -818,12 +1002,16 @@ input[type="file"] {
   }
 
   .nav-links a {
-    padding: 8px 9px;
+    padding: 9px 11px;
     font-size: 0.88rem;
   }
 
+  h1 {
+    font-size: clamp(2.65rem, 14vw, 4rem);
+  }
+
   .hero {
-    padding-bottom: 42px;
+    padding-bottom: 48px;
   }
 
   .hero-actions,
@@ -842,11 +1030,12 @@ input[type="file"] {
   .settings-panel,
   .quote-builder,
   .data-panel {
-    padding: 18px;
+    padding: 20px;
   }
 
   .calc-form {
     grid-template-columns: 1fr;
+    gap: 16px;
   }
 
   .results.compact {
@@ -854,7 +1043,7 @@ input[type="file"] {
   }
 
   .calculator-card {
-    padding: 18px;
+    padding: 20px;
   }
 
   .page-intro {
@@ -876,7 +1065,26 @@ input[type="file"] {
   }
 
   .donut-chart {
-    width: 118px;
+    width: 138px;
+  }
+
+  .tab-list {
+    width: 100%;
+    border-radius: var(--radius-sm);
+  }
+
+  .tab-list button {
+    flex: 1 1 100%;
+  }
+
+  .compact-table {
+    max-height: 285px;
+  }
+
+  input,
+  select,
+  .button {
+    min-height: 56px;
   }
 
   .quote-lines div,
