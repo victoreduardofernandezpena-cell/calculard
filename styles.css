@@ -369,6 +369,104 @@ h1 {
   margin-bottom: 28px;
 }
 
+.affordability-panel {
+  margin-bottom: 28px;
+}
+
+.affordability-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.18fr) minmax(320px, 0.82fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.affordability-inputs {
+  min-width: 0;
+}
+
+.affordability-form label:first-child {
+  grid-column: auto;
+}
+
+.affordability-actions {
+  margin-top: 18px;
+}
+
+.affordability-output {
+  display: grid;
+  gap: 18px;
+  min-width: 0;
+}
+
+.affordability-verdict {
+  display: grid;
+  gap: 8px;
+  min-height: 132px;
+  padding: 22px;
+  border: 1px solid rgba(43, 212, 160, 0.32);
+  border-radius: var(--radius-sm);
+  background: rgba(43, 212, 160, 0.09);
+}
+
+.affordability-verdict span {
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.affordability-verdict strong {
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1;
+}
+
+.affordability-verdict.good {
+  border-color: rgba(43, 212, 160, 0.4);
+  background: rgba(43, 212, 160, 0.1);
+}
+
+.affordability-verdict.warning {
+  border-color: rgba(244, 201, 93, 0.42);
+  background: rgba(244, 201, 93, 0.11);
+}
+
+.affordability-verdict.danger {
+  border-color: rgba(255, 107, 107, 0.42);
+  background: rgba(255, 107, 107, 0.1);
+}
+
+.affordability-verdict.warning strong {
+  color: var(--gold);
+}
+
+.affordability-verdict.danger strong {
+  color: var(--danger);
+}
+
+.affordability-meter {
+  height: 14px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.affordability-meter span {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+  transition: width 220ms ease, background 220ms ease;
+}
+
+.affordability-meter span.warning {
+  background: var(--gold);
+}
+
+.affordability-meter span.danger {
+  background: var(--danger);
+}
+
 .calc-form.stacked {
   grid-template-columns: 1fr;
 }
@@ -967,7 +1065,8 @@ input[type="file"] {
   .calculator-grid,
   .dashboard-layout,
   .dashboard-layout.lower,
-  .summary-grid {
+  .summary-grid,
+  .affordability-layout {
     grid-template-columns: 1fr;
   }
 

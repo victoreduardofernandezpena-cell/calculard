@@ -58,6 +58,7 @@
           <a href="#itbis">ITBIS</a>
           <a href="#sueldo">Sueldo</a>
           <a href="#vehiculos">Vehículos</a>
+          <a href="#capacidad">Capacidad</a>
         </div>
       </nav>
     </header>
@@ -179,7 +180,12 @@
                   <option value="Scotiabank">Scotiabank · 13.25%</option>
                   <option value="Asociación Popular">Asociación Popular · 13.75%</option>
                   <option value="Financiera local">Financiera local · 15.5%</option>
+                  <option value="custom">Tasa personalizada</option>
                 </select>
+              </label>
+              <label class="custom-rate-field" data-custom-rate-field hidden>
+                <span>Tasa anual personalizada (%)</span>
+                <input name="customRate" type="number" min="0" step="0.01" value="12">
               </label>
               <label>
                 <span>Plazo en años</span>
@@ -301,6 +307,76 @@
 
           <div class="tab-panel" role="tabpanel" data-tab-panel="history">
             <div class="history-list" data-history-list></div>
+          </div>
+        </article>
+
+        <article class="data-panel affordability-panel" id="capacidad">
+          <div class="card-heading">
+            <span class="section-icon" aria-hidden="true">C</span>
+            <p>Capacidad de compra</p>
+            <h2>Evaluador de vehículo</h2>
+          </div>
+
+          <div class="affordability-layout">
+            <div class="affordability-inputs">
+              <form class="calc-form affordability-form" data-affordability-form>
+                <label>
+                  <span>Ingreso mensual neto</span>
+                  <input name="income" type="number" min="0" step="1000" value="200000">
+                </label>
+                <label>
+                  <span>Gastos fijos mensuales</span>
+                  <input name="expenses" type="number" min="0" step="1000" value="130000">
+                </label>
+                <label>
+                  <span>Ahorro mínimo mensual</span>
+                  <input name="savingsGoal" type="number" min="0" step="1000" value="20000">
+                </label>
+                <label>
+                  <span>Precio del vehículo</span>
+                  <input name="vehiclePrice" type="number" min="0" step="5000" value="6000000">
+                </label>
+                <label>
+                  <span>Inicial</span>
+                  <input name="downPayment" type="number" min="0" step="5000" value="1200000">
+                </label>
+                <label>
+                  <span>Tasa anual (%)</span>
+                  <input name="rate" type="number" min="0" step="0.01" value="13">
+                </label>
+                <label>
+                  <span>Plazo en años</span>
+                  <input name="years" type="number" min="1" max="10" step="1" value="5">
+                </label>
+                <label>
+                  <span>Seguro mensual</span>
+                  <input name="insurance" type="number" min="0" step="500" value="12000">
+                </label>
+                <label>
+                  <span>Combustible mensual</span>
+                  <input name="fuel" type="number" min="0" step="500" value="18000">
+                </label>
+                <label>
+                  <span>Mantenimiento mensual</span>
+                  <input name="maintenance" type="number" min="0" step="500" value="8000">
+                </label>
+              </form>
+              <div class="action-row affordability-actions">
+                <button class="button secondary" type="button" data-use-current-quote>Usar cotización actual</button>
+              </div>
+            </div>
+
+            <div class="affordability-output">
+              <div class="affordability-verdict" data-affordability-verdict>
+                <span>Evaluación</span>
+                <strong>Calculando</strong>
+              </div>
+              <div class="results compact" data-results="affordability"></div>
+              <div class="affordability-meter" aria-label="Uso del ingreso">
+                <span data-affordability-meter></span>
+              </div>
+              <p class="note" data-affordability-note></p>
+            </div>
           </div>
         </article>
       </section>

@@ -40,6 +40,15 @@ function percent(value) {
   return `${NUMBER_FORMATTER.format(value)}%`;
 }
 
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
 function getFormValues(form) {
   return Object.fromEntries(
     new FormData(form).entries().map(([key, value]) => {
@@ -112,8 +121,8 @@ function renderResults(name, rows) {
     .map(
       (row) => `
         <div class="result-row ${row.variant || ""}">
-          <span>${row.label}</span>
-          <strong>${row.value}</strong>
+          <span>${escapeHtml(row.label)}</span>
+          <strong>${escapeHtml(row.value)}</strong>
         </div>
       `
     )
@@ -179,6 +188,92 @@ function calculateVehicle(form) {
   ]);
 }
 
+function getAffordabilityVerdict({ income, freeBeforeVehicle, freeAfterVehicle, reserveAfterSavings, vehicleShare, downPaymentPercent, years }) {
+  if (income <= 0 || freeBeforeVehicle <= 0 || freeAfterVehicle < 0 || reserveAfterSavings < 0 || vehicleShare > 30) {
+    return {
+      level: "danger",
+      title: "Riesgoso",
+      note: "Con estos datos, el vehículo consume demasiado margen mensual. Conviene aumentar inicial, bajar precio o reducir otros compromisos antes de comprar."
+    };
+  }
+
+  if (vehicleShare > 20 || downPaymentPercent < 20 || years > 5 || reserveAfterSavings < income * 0.1) {
+    return {
+      level: "warning",
+      title: "Ajustado",
+      note: "La compra puede funcionar, pero deja poco margen. Revisa seguro, combustible, inicial y plazo antes de comprometerte."
+    };
+  }
+
+  return {
+    level: "good",
+    title: "Recomendable",
+    note: "La compra luce manejable con estos datos, manteniendo margen mensual luego de gastos, vehículo y ahorro mínimo."
+  };
+}
+
+function calculateAffordability(form) {
+  const values = getFormValues(form);
+  const income = values.income || 0;
+  const expenses = values.expenses || 0;
+  const savingsGoal = values.savingsGoal || 0;
+  const vehiclePrice = values.vehiclePrice || 0;
+  const downPayment = Math.min(values.downPayment || 0, vehiclePrice);
+  const financed = Math.max(vehiclePrice - downPayment, 0);
+  const years = values.years || 1;
+  const rate = values.rate || 0;
+  const loanPayment = monthlyPayment(financed, rate, years);
+  const ownershipCosts = (values.insurance || 0) + (values.fuel || 0) + (values.maintenance || 0);
+  const totalVehicleCost = loanPayment + ownershipCosts;
+  const freeBeforeVehicle = income - expenses;
+  const freeAfterVehicle = freeBeforeVehicle - totalVehicleCost;
+  const reserveAfterSavings = freeAfterVehicle - savingsGoal;
+  const vehicleShare = income > 0 ? (totalVehicleCost / income) * 100 : 0;
+  const downPaymentPercent = vehiclePrice > 0 ? (downPayment / vehiclePrice) * 100 : 0;
+  const verdict = getAffordabilityVerdict({
+    income,
+    freeBeforeVehicle,
+    freeAfterVehicle,
+    reserveAfterSavings,
+    vehicleShare,
+    downPaymentPercent,
+    years
+  });
+
+  renderAffordabilityVerdict(verdict, vehicleShare);
+  renderResults("affordability", [
+    { label: "Libre antes del vehículo", value: money(freeBeforeVehicle), variant: freeBeforeVehicle > 0 ? "" : "danger" },
+    { label: "Cuota estimada", value: money(loanPayment), variant: "highlight" },
+    { label: "Seguro, combustible y mantenimiento", value: money(ownershipCosts), variant: "warning" },
+    { label: "Costo mensual total", value: money(totalVehicleCost), variant: vehicleShare > 30 ? "danger" : "warning" },
+    { label: "Libre después del vehículo", value: money(freeAfterVehicle), variant: freeAfterVehicle < 0 ? "danger" : "" },
+    { label: "Después de ahorro mínimo", value: money(reserveAfterSavings), variant: reserveAfterSavings < 0 ? "danger" : "highlight" },
+    { label: "Ingreso destinado al vehículo", value: percent(vehicleShare), variant: vehicleShare > 30 ? "danger" : vehicleShare > 20 ? "warning" : "" },
+    { label: "Inicial sobre precio", value: percent(downPaymentPercent), variant: downPaymentPercent < 20 ? "warning" : "" }
+  ]);
+}
+
+function renderAffordabilityVerdict(verdict, vehicleShare) {
+  const verdictNode = document.querySelector("[data-affordability-verdict]");
+  const meter = document.querySelector("[data-affordability-meter]");
+  const note = document.querySelector("[data-affordability-note]");
+  const cappedShare = Math.min(Math.max(vehicleShare, 0), 100);
+
+  if (verdictNode) {
+    verdictNode.className = `affordability-verdict ${verdict.level}`;
+    verdictNode.querySelector("strong").textContent = verdict.title;
+  }
+
+  if (meter) {
+    meter.style.width = `${cappedShare}%`;
+    meter.className = verdict.level;
+  }
+
+  if (note) {
+    note.textContent = verdict.note;
+  }
+}
+
 function getDealerProfile() {
   const saved = readStorage(DEALER_KEY, {});
   const form = document.querySelector("[data-dealer-form]");
@@ -193,8 +288,16 @@ function getDealerProfile() {
   };
 }
 
-function getSelectedBank(bankName) {
-  return BANK_RATES.find((bank) => bank.name === bankName) || BANK_RATES[0];
+function getSelectedBank(values) {
+  if (values.bank === "custom") {
+    return {
+      name: "Tasa personalizada",
+      rate: Math.max(Number(values.customRate) || 0, 0),
+      isCustom: true
+    };
+  }
+
+  return BANK_RATES.find((bank) => bank.name === values.bank) || BANK_RATES[0];
 }
 
 function getCommercialQuote() {
@@ -202,7 +305,7 @@ function getCommercialQuote() {
   if (!form) return null;
 
   const values = getFormValues(form);
-  const bank = getSelectedBank(values.bank);
+  const bank = getSelectedBank(values);
   const price = values.price || 0;
   const downPayment = Math.min(values.downPayment || 0, price);
   const financed = Math.max(price - downPayment, 0);
@@ -260,6 +363,20 @@ function quoteLineItems(quote) {
   ];
 }
 
+function renderLogo(node, logo) {
+  node.replaceChildren();
+
+  if (!logo) {
+    node.textContent = "RD";
+    return;
+  }
+
+  const image = document.createElement("img");
+  image.src = logo;
+  image.alt = "";
+  node.append(image);
+}
+
 function renderCommercialResults(quote) {
   renderResults("commercial", [
     { label: "Inicial requerida", value: money(quote.downPayment) },
@@ -275,7 +392,9 @@ function renderBankTable(quote) {
   const target = document.querySelector("[data-bank-table]");
   if (!target) return;
 
-  target.innerHTML = BANK_RATES.map((bank) => {
+  const rates = quote.bank.isCustom ? [quote.bank, ...BANK_RATES] : BANK_RATES;
+
+  target.innerHTML = rates.map((bank) => {
     const payment = monthlyPayment(quote.financed, bank.rate, quote.years);
     const totalPaid = payment * quote.years * 12;
     const interest = Math.max(totalPaid - quote.financed, 0);
@@ -326,9 +445,7 @@ function renderQuotePreview(quote) {
   const advisorNode = document.querySelector("[data-quote-advisor]");
   const linesNode = document.querySelector("[data-quote-lines]");
 
-  logoNodes.forEach((node) => {
-    node.innerHTML = dealer.logo ? `<img src="${dealer.logo}" alt="">` : "RD";
-  });
+  logoNodes.forEach((node) => renderLogo(node, dealer.logo));
   if (dealerNode) dealerNode.textContent = dealer.dealerName;
   if (contactNode) contactNode.textContent = `${dealer.dealerPhone} · ${dealer.salesperson}`;
   if (titleNode) titleNode.textContent = quote.itemName;
@@ -337,7 +454,7 @@ function renderQuotePreview(quote) {
   if (!linesNode) return;
 
   linesNode.innerHTML = quoteLineItems(quote)
-    .map(([label, value]) => `<div><span>${label}</span><strong>${value}</strong></div>`)
+    .map(([label, value]) => `<div><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></div>`)
     .join("");
 }
 
@@ -381,7 +498,7 @@ function renderDealerPreview() {
   const nameNode = document.querySelector("[data-dealer-name]");
   const phoneNode = document.querySelector("[data-dealer-phone]");
 
-  if (logoNode) logoNode.innerHTML = dealer.logo ? `<img src="${dealer.logo}" alt="">` : "RD";
+  if (logoNode) renderLogo(logoNode, dealer.logo);
   if (nameNode) nameNode.textContent = dealer.dealerName;
   if (phoneNode) phoneNode.textContent = dealer.dealerPhone;
 
@@ -408,8 +525,8 @@ function renderHistory() {
       (item) => `
         <div class="history-item">
           <div>
-            <strong>${item.itemName}</strong>
-            <span>${item.clientName} · ${item.bankName}</span>
+            <strong>${escapeHtml(item.itemName)}</strong>
+            <span>${escapeHtml(item.clientName)} · ${escapeHtml(item.bankName)}</span>
           </div>
           <strong>${money(item.payment)}</strong>
         </div>
@@ -444,6 +561,7 @@ function updateCommercialDashboard() {
   const quote = getCommercialQuote();
   if (!quote) return;
 
+  toggleCustomRateField();
   renderDealerPreview();
   renderCommercialResults(quote);
   renderBankTable(quote);
@@ -547,7 +665,10 @@ function initializeCommercialDashboard() {
 
   const bankSelect = commercialForm.elements.bank;
   if (bankSelect.options.length === 0) {
-    bankSelect.innerHTML = BANK_RATES.map((bank) => `<option value="${bank.name}">${bank.name} · ${percent(bank.rate)}</option>`).join("");
+    bankSelect.innerHTML = [
+      ...BANK_RATES.map((bank) => `<option value="${bank.name}">${bank.name} · ${percent(bank.rate)}</option>`),
+      '<option value="custom">Tasa personalizada</option>'
+    ].join("");
   }
 
   commercialForm.addEventListener("input", updateCommercialDashboard);
@@ -604,7 +725,41 @@ function initializeCommercialDashboard() {
   });
 
   renderHistory();
+  toggleCustomRateField();
   updateCommercialDashboard();
+}
+
+function toggleCustomRateField() {
+  const commercialForm = document.querySelector("[data-commercial-form]");
+  const field = document.querySelector("[data-custom-rate-field]");
+  if (!commercialForm || !field) return;
+
+  const isCustomRate = commercialForm.elements.bank.value === "custom";
+  field.hidden = !isCustomRate;
+}
+
+function fillAffordabilityFromCurrentQuote(form) {
+  const quote = getCommercialQuote();
+  if (!quote) return;
+
+  form.elements.vehiclePrice.value = Math.round(quote.price);
+  form.elements.downPayment.value = Math.round(quote.downPayment);
+  form.elements.rate.value = quote.bank.rate;
+  form.elements.years.value = quote.years;
+  calculateAffordability(form);
+}
+
+function initializeAffordabilityCalculator() {
+  const form = document.querySelector("[data-affordability-form]");
+  if (!form) return;
+
+  const update = () => calculateAffordability(form);
+  form.addEventListener("input", update);
+  form.addEventListener("change", update);
+  document.querySelector("[data-use-current-quote]")?.addEventListener("click", () => {
+    fillAffordabilityFromCurrentQuote(form);
+  });
+  update();
 }
 
 const calculators = {
@@ -624,6 +779,7 @@ document.querySelectorAll("[data-calculator]").forEach((form) => {
 });
 
 initializeCommercialDashboard();
+initializeAffordabilityCalculator();
 
 window.addEventListener("load", () => {
   document.body.classList.add("app-ready");
