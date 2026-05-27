@@ -2921,3 +2921,41 @@ th {
     grid-template-columns: 1fr;
   }
 }
+
+/* Fix cramped affordability/result cards */
+.result-row span,
+.result-row strong {
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.result-row span {
+  white-space: normal;
+}
+
+.result-row strong {
+  white-space: nowrap;
+}
+
+.affordability-output .results.compact {
+  grid-template-columns: 1fr;
+}
+
+.affordability-output .results.compact .result-row {
+  grid-template-columns: minmax(0, 1fr) auto;
+  min-height: 68px;
+}
+
+@media (max-width: 760px) {
+  .result-row,
+  .results.compact .result-row,
+  .affordability-output .results.compact .result-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .result-row strong {
+    text-align: left;
+    white-space: normal;
+  }
+}
