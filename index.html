@@ -3,16 +3,16 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>CalculaRD | Calculadoras financieras y DGII para RD</title>
+    <title>CalculaRD | Simulaciones financieras para República Dominicana</title>
     <meta
       name="description"
-      content="Dashboard y calculadoras para préstamos, ITBIS, sueldo neto, vehículos, cotizaciones y financiamiento en República Dominicana."
+      content="Simula financiamientos, cuotas mensuales, ITBIS, salario neto y capacidad de compra para República Dominicana."
     >
     <meta name="theme-color" content="#0d1117">
-    <meta property="og:title" content="CalculaRD | Calculadoras financieras para RD">
+    <meta property="og:title" content="CalculaRD | Simulaciones financieras para RD">
     <meta
       property="og:description"
-      content="Calcula préstamos, compara tasas, genera cotizaciones, estima ITBIS, sueldo neto y financiamiento de vehículos en RD."
+      content="Simula financiamientos, compara entidades, genera cotizaciones y estima ITBIS, salario neto y capacidad de compra en RD."
     >
     <meta property="og:type" content="website">
     <meta property="og:image" content="/og-image.svg">
@@ -20,7 +20,10 @@
     <link rel="canonical" href="https://calculard.com/">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="manifest" href="/site.webmanifest">
-    <link rel="stylesheet" href="styles.css?v=capacidad-1">
+    <script>
+      document.documentElement.dataset.theme = localStorage.getItem("calculard_theme") || "dark";
+    </script>
+    <link rel="stylesheet" href="styles.css?v=capacidad-2">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -28,7 +31,7 @@
         "name": "CalculaRD",
         "applicationCategory": "FinanceApplication",
         "operatingSystem": "Any",
-        "description": "Dashboard comercial con calculadoras financieras y DGII para República Dominicana.",
+        "description": "Centro de simulaciones financieras para República Dominicana.",
         "url": "https://calculard.com/",
         "offers": {
           "@type": "Offer",
@@ -53,56 +56,103 @@
           <span>CalculaRD</span>
         </a>
         <div class="nav-links">
-          <a href="#dashboard">Dashboard</a>
-          <a href="#prestamos">Préstamos</a>
+          <a href="#dashboard">Cotizaciones</a>
+          <a href="#prestamos">Financiamiento</a>
           <a href="#itbis">ITBIS</a>
           <a href="#sueldo">Sueldo</a>
           <a href="#vehiculos">Vehículos</a>
           <a href="#capacidad">Capacidad</a>
+          <a href="#mora">Mora</a>
+          <a href="/sobre.html">Sobre</a>
+          <button class="theme-toggle" type="button" data-theme-toggle aria-label="Cambiar modo claro u oscuro">Modo claro</button>
         </div>
       </nav>
+      <div class="independence-notice">
+        CalculaRD es una herramienta independiente. No representa bancos, entidades financieras, DGII ni instituciones públicas. Los resultados son referenciales.
+      </div>
     </header>
 
     <main id="inicio">
       <section class="hero">
         <div class="hero-copy">
-          <p class="eyebrow">Herramientas rápidas para República Dominicana</p>
-          <h1>Calcula cuotas, impuestos y salario neto sin complicarte.</h1>
+          <p class="eyebrow">Herramientas financieras para República Dominicana</p>
+          <h1>Tus números claros, mejores decisiones.</h1>
           <p>
-            Una web simple para estimar préstamos, ITBIS, sueldo neto y financiamiento
-            de vehículos con datos claros y resultados al instante.
+            Calculadoras financieras diseñadas para República Dominicana.
+            Simula, compara y cotiza antes de decidir.
           </p>
           <div class="hero-actions" aria-label="Ir a calculadoras">
-            <a class="button primary" href="#dashboard">Abrir dashboard</a>
-            <a class="button secondary" href="#prestamos">Calcular préstamo</a>
+            <a class="button primary" href="#dashboard">Abrir centro de cotizaciones</a>
+            <a class="button secondary" href="#capacidad">Evaluar capacidad</a>
           </div>
         </div>
-        <div class="quick-panel" aria-label="Resumen">
-          <div>
-            <i aria-hidden="true">C</i>
-            <span>Para vendedores</span>
-            <strong>Cotiza</strong>
-          </div>
-          <div>
-            <i aria-hidden="true">B</i>
-            <span>Comparador</span>
-            <strong>Bancos</strong>
-          </div>
-          <div>
-            <i aria-hidden="true">H</i>
-            <span>Historial</span>
-            <strong>Local</strong>
-          </div>
+        <div class="quick-panel dashboard-cards" aria-label="Herramientas principales">
+          <a href="#prestamos">
+            <i aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M7 3h8l4 4v14H7z"/><path d="M14 3v5h5"/><path d="M9.5 13h5"/><path d="M9.5 17h5"/></svg>
+            </i>
+            <span>Cuotas e intereses</span>
+            <strong>Financiamiento</strong>
+          </a>
+          <a href="#itbis">
+            <i aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M19 5 5 19"/><path d="M7 7h.01"/><path d="M17 17h.01"/></svg>
+            </i>
+            <span>18% en RD</span>
+            <strong>ITBIS</strong>
+          </a>
+          <a href="#sueldo">
+            <i aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </i>
+            <span>AFP, SFS e ISR</span>
+            <strong>Sueldo neto</strong>
+          </a>
+          <a href="#vehiculos">
+            <i aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M5 17h14"/><path d="M7 17a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z"/><path d="M17 17a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z"/><path d="M5 17l1.8-6h10.4L19 17"/><path d="M8 11l2-4h4l2 4"/></svg>
+            </i>
+            <span>Inicial y cuota</span>
+            <strong>Vehículos</strong>
+          </a>
+          <a href="#dashboard">
+            <i aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M4 10h16"/><path d="M6 10v8"/><path d="M10 10v8"/><path d="M14 10v8"/><path d="M18 10v8"/><path d="M3 18h18"/><path d="M12 4 4 8h16z"/></svg>
+            </i>
+            <span>Tasas editables</span>
+            <strong>Comparador</strong>
+          </a>
+          <a href="#dashboard">
+            <i aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M8 3h8l3 3v15H5V3z"/><path d="M16 3v4h4"/><path d="M8 12h8"/><path d="M8 16h6"/></svg>
+            </i>
+            <span>PDF, WhatsApp e imagen</span>
+            <strong>Cotizador</strong>
+          </a>
+          <a href="#capacidad">
+            <i aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M8 15l3-3 3 2 5-7"/></svg>
+            </i>
+            <span>Compra responsable</span>
+            <strong>Capacidad</strong>
+          </a>
+          <a href="#mora">
+            <i aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 6v6l4 2"/><path d="M21 12a9 9 0 1 1-3-6.7"/></svg>
+            </i>
+            <span>Atrasos y cargos</span>
+            <strong>Mora</strong>
+          </a>
         </div>
       </section>
 
       <section class="dashboard" id="dashboard" aria-label="Dashboard comercial">
         <div class="section-heading">
-          <p class="eyebrow">Modo comercial</p>
-          <h2>Dashboard para dealers, financieras y vendedores.</h2>
+          <p class="eyebrow">Panel Comercial</p>
+          <h2>Centro de cotizaciones para dealers, entidades financieras y asesores.</h2>
           <p>
-            Simula financiamientos, compara bancos, genera una cotización imprimible
-            y guarda las últimas simulaciones en este navegador.
+            Simula financiamientos, compara entidades, genera una cotización imprimible
+            y conserva las últimas simulaciones en este navegador.
           </p>
         </div>
 
@@ -116,7 +166,7 @@
             <form class="calc-form stacked" data-dealer-form>
               <label>
                 <span>Nombre del negocio</span>
-                <input name="dealerName" type="text" value="Tu Dealer RD">
+                <input name="dealerName" type="text" value="AutoPremium RD">
               </label>
               <label>
                 <span>Teléfono o WhatsApp</span>
@@ -138,7 +188,7 @@
             <div class="dealer-preview">
               <div class="dealer-logo" data-dealer-logo>RD</div>
               <div>
-                <strong data-dealer-name>Tu Dealer RD</strong>
+              <strong data-dealer-name>AutoPremium RD</strong>
                 <span data-dealer-phone>809-000-0000</span>
               </div>
             </div>
@@ -153,7 +203,7 @@
             <form class="calc-form" data-commercial-form>
               <label>
                 <span>Cliente</span>
-                <input name="clientName" type="text" value="Cliente interesado">
+                <input name="clientName" type="text" value="Juan Pérez">
               </label>
               <label>
                 <span>WhatsApp del cliente</span>
@@ -161,7 +211,7 @@
               </label>
               <label>
                 <span>Producto o vehículo</span>
-                <input name="itemName" type="text" value="Vehículo 2021">
+                <input name="itemName" type="text" value="Toyota Corolla 2021">
               </label>
               <label>
                 <span>Precio</span>
@@ -172,14 +222,14 @@
                 <input name="downPayment" type="number" min="0" step="5000" value="300000">
               </label>
               <label>
-                <span>Banco o financiera</span>
+                <span>Entidad financiera</span>
                 <select name="bank">
                   <option value="Banreservas">Banreservas · 11.9%</option>
                   <option value="Banco Popular">Banco Popular · 12.25%</option>
                   <option value="BHD">BHD · 12.5%</option>
                   <option value="Scotiabank">Scotiabank · 13.25%</option>
                   <option value="Asociación Popular">Asociación Popular · 13.75%</option>
-                  <option value="Financiera local">Financiera local · 15.5%</option>
+                  <option value="Entidad privada">Entidad privada · 15.5%</option>
                   <option value="custom">Tasa personalizada</option>
                 </select>
               </label>
@@ -217,7 +267,7 @@
             <div class="card-heading">
               <span class="section-icon" aria-hidden="true">T</span>
               <p>Comparador</p>
-              <h2>Tasas referenciales</h2>
+              <h2>Comparar entidades</h2>
             </div>
             <div class="table-wrap">
               <table>
@@ -232,19 +282,20 @@
                 <tbody data-bank-table></tbody>
               </table>
             </div>
+            <p class="note">Tasas referenciales editables. Confirma siempre la tasa final con la entidad financiera.</p>
           </article>
 
           <article class="data-panel quote-preview" data-quote-preview>
             <div class="quote-brand">
               <div class="dealer-logo" data-quote-logo>RD</div>
               <div>
-                <strong data-quote-dealer>Tu Dealer RD</strong>
+              <strong data-quote-dealer>AutoPremium RD</strong>
                 <span data-quote-contact>809-000-0000</span>
               </div>
             </div>
             <div class="quote-body">
               <p class="eyebrow">Cotización</p>
-              <h2 data-quote-title>Vehículo 2021</h2>
+              <h2 data-quote-title>Toyota Corolla 2021</h2>
               <p class="quote-date" data-quote-date></p>
               <div class="quote-lines" data-quote-lines></div>
               <div class="advisor-box">
@@ -252,8 +303,8 @@
                 <strong data-quote-advisor>Asesor comercial</strong>
               </div>
               <p class="quote-disclaimer">
-                Esta cotización es una simulación referencial. La aprobación, tasa final,
-                cargos, seguros y condiciones están sujetos a evaluación de la entidad financiera.
+                Las simulaciones son referenciales y pueden variar según condiciones bancarias,
+                seguros, comisiones y evaluación crediticia.
               </p>
             </div>
           </article>
@@ -385,12 +436,12 @@
         <article class="calculator-card" id="prestamos">
           <div class="card-heading">
             <span class="section-icon" aria-hidden="true">P</span>
-            <p>Calculadora de préstamos</p>
+            <p>Simulador de financiamiento</p>
             <h2>Cuota mensual</h2>
           </div>
           <form class="calc-form" data-calculator="loan">
             <label>
-              <span>Monto del préstamo</span>
+              <span>Monto financiado</span>
               <input name="amount" type="number" min="0" step="1000" value="1000000">
             </label>
             <label>
@@ -403,6 +454,10 @@
             </label>
           </form>
           <div class="results" data-results="loan"></div>
+          <div class="share-buttons">
+            <button class="button secondary" type="button" data-copy-result="loan">Copiar resultado</button>
+            <button class="button whatsapp" type="button" data-whatsapp-result="loan">Compartir por WhatsApp</button>
+          </div>
         </article>
 
         <article class="calculator-card" id="itbis">
@@ -425,6 +480,10 @@
             </label>
           </form>
           <div class="results" data-results="itbis"></div>
+          <div class="share-buttons">
+            <button class="button secondary" type="button" data-copy-result="itbis">Copiar resultado</button>
+            <button class="button whatsapp" type="button" data-whatsapp-result="itbis">Compartir por WhatsApp</button>
+          </div>
         </article>
 
         <article class="calculator-card" id="sueldo">
@@ -438,16 +497,32 @@
               <span>Salario mensual bruto</span>
               <input name="salary" type="number" min="0" step="1000" value="75000">
             </label>
+            <label>
+              <span>Otros ingresos mensuales</span>
+              <input name="otherIncome" type="number" min="0" step="1000" value="0">
+            </label>
+            <label>
+              <span>Bonificación promedio mensual</span>
+              <input name="bonus" type="number" min="0" step="1000" value="0">
+            </label>
+            <label>
+              <span>Dependientes</span>
+              <input name="dependents" type="number" min="0" step="1" value="0">
+            </label>
           </form>
           <div class="results" data-results="salary"></div>
-          <p class="note">ISR estimado con escala anual DGII 2026 luego de AFP y SFS.</p>
+          <div class="share-buttons">
+            <button class="button secondary" type="button" data-copy-result="salary">Copiar resultado</button>
+            <button class="button whatsapp" type="button" data-whatsapp-result="salary">Compartir por WhatsApp</button>
+          </div>
+          <p class="note">Esta estimación puede variar según topes contributivos, beneficios, empleador y cambios fiscales.</p>
         </article>
 
         <article class="calculator-card" id="vehiculos">
           <div class="card-heading">
             <span class="section-icon" aria-hidden="true">V</span>
-            <p>Calculadora de vehículos</p>
-            <h2>Financiamiento de auto</h2>
+            <p>Financiamiento de vehículo</p>
+            <h2>Simulación vehicular</h2>
           </div>
           <form class="calc-form" data-calculator="vehicle">
             <label>
@@ -468,20 +543,178 @@
             </label>
           </form>
           <div class="results" data-results="vehicle"></div>
+          <div class="share-buttons">
+            <button class="button secondary" type="button" data-copy-result="vehicle">Copiar resultado</button>
+            <button class="button whatsapp" type="button" data-whatsapp-result="vehicle">Compartir por WhatsApp</button>
+          </div>
         </article>
+
+        <article class="calculator-card" id="prestamo-personal">
+          <div class="card-heading">
+            <span class="section-icon" aria-hidden="true">P</span>
+            <p>Capacidad de préstamo personal</p>
+            <h2>Monto financiable</h2>
+          </div>
+          <form class="calc-form" data-calculator="personalCapacity">
+            <label>
+              <span>Ingreso neto mensual</span>
+              <input name="income" type="number" min="0" step="1000" value="80000">
+            </label>
+            <label>
+              <span>Gastos mensuales</span>
+              <input name="expenses" type="number" min="0" step="1000" value="30000">
+            </label>
+            <label>
+              <span>Deudas actuales mensuales</span>
+              <input name="debts" type="number" min="0" step="1000" value="15000">
+            </label>
+            <label>
+              <span>Máximo recomendado para cuota (%)</span>
+              <input name="maxPercent" type="number" min="1" max="60" step="1" value="30">
+            </label>
+            <label>
+              <span>Tasa anual (%)</span>
+              <input name="rate" type="number" min="0" step="0.01" value="14">
+            </label>
+            <label>
+              <span>Plazo en años</span>
+              <input name="years" type="number" min="1" max="10" step="1" value="5">
+            </label>
+          </form>
+          <div class="results" data-results="personalCapacity"></div>
+          <div class="share-buttons">
+            <button class="button secondary" type="button" data-copy-result="personalCapacity">Copiar resultado</button>
+            <button class="button whatsapp" type="button" data-whatsapp-result="personalCapacity">Compartir por WhatsApp</button>
+          </div>
+          <p class="note" data-personal-capacity-note></p>
+        </article>
+
+        <article class="calculator-card" id="mora">
+          <div class="card-heading">
+            <span class="section-icon" aria-hidden="true">M</span>
+            <p>Calculadora de mora o atraso</p>
+            <h2>Mora estimada</h2>
+          </div>
+          <form class="calc-form" data-calculator="lateFee">
+            <label>
+              <span>Cuota mensual</span>
+              <input name="payment" type="number" min="0" step="500" value="15000">
+            </label>
+            <label>
+              <span>Días de atraso</span>
+              <input name="daysLate" type="number" min="0" step="1" value="15">
+            </label>
+            <label>
+              <span>Porcentaje de mora mensual (%)</span>
+              <input name="monthlyLateRate" type="number" min="0" step="0.01" value="5">
+            </label>
+            <label>
+              <span>Cargo fijo opcional</span>
+              <input name="fixedCharge" type="number" min="0" step="100" value="0">
+            </label>
+          </form>
+          <div class="results" data-results="lateFee"></div>
+          <div class="share-buttons">
+            <button class="button secondary" type="button" data-copy-result="lateFee">Copiar resultado</button>
+            <button class="button whatsapp" type="button" data-whatsapp-result="lateFee">Compartir por WhatsApp</button>
+          </div>
+          <p class="note">Verifica siempre los cargos reales en tu contrato o con la entidad.</p>
+        </article>
+
+        <article class="calculator-card" id="ahorro">
+          <div class="card-heading">
+            <span class="section-icon" aria-hidden="true">A</span>
+            <p>Interés compuesto y ahorro</p>
+            <h2>Ahorro estimado</h2>
+          </div>
+          <form class="calc-form" data-calculator="savings">
+            <label>
+              <span>Monto inicial</span>
+              <input name="initial" type="number" min="0" step="1000" value="100000">
+            </label>
+            <label>
+              <span>Aporte mensual</span>
+              <input name="monthly" type="number" min="0" step="500" value="5000">
+            </label>
+            <label>
+              <span>Tasa anual (%)</span>
+              <input name="rate" type="number" min="0" step="0.01" value="8">
+            </label>
+            <label>
+              <span>Plazo en años</span>
+              <input name="years" type="number" min="1" max="40" step="1" value="10">
+            </label>
+          </form>
+          <div class="results" data-results="savings"></div>
+          <div class="share-buttons">
+            <button class="button secondary" type="button" data-copy-result="savings">Copiar resultado</button>
+            <button class="button whatsapp" type="button" data-whatsapp-result="savings">Compartir por WhatsApp</button>
+          </div>
+        </article>
+      </section>
+
+      <section class="faq-section" aria-label="Preguntas frecuentes">
+        <div class="section-heading">
+          <p class="eyebrow">Preguntas frecuentes</p>
+          <h2>Dudas comunes antes de decidir.</h2>
+        </div>
+        <div class="faq-grid">
+          <details>
+            <summary>¿CalculaRD otorga financiamientos?</summary>
+            <p>No. CalculaRD es una herramienta independiente de simulación. No aprueba préstamos ni representa entidades financieras.</p>
+          </details>
+          <details>
+            <summary>¿Las tasas del comparador son oficiales?</summary>
+            <p>No. Son tasas referenciales y editables para comparar escenarios. Confirma siempre la tasa final con la entidad financiera.</p>
+          </details>
+          <details>
+            <summary>¿Por qué el resultado puede variar?</summary>
+            <p>Puede variar por evaluación crediticia, seguros, comisiones, políticas internas, empleador o cambios fiscales.</p>
+          </details>
+          <details>
+            <summary>¿Puedo compartir una simulación?</summary>
+            <p>Sí. Las calculadoras simples permiten copiar o compartir el resultado por WhatsApp, y el cotizador comercial mantiene sus opciones de imagen, PDF y resumen.</p>
+          </details>
+        </div>
       </section>
     </main>
 
     <footer class="site-footer">
-      <p>
-        Cálculos estimados. Verifica condiciones finales con tu banco, empleador o asesor fiscal.
-      </p>
-      <p>
-        Fuentes: <a href="https://dgii.gov.do/cicloContribuyente/obligacionesTributarias/principalesImpuestos/Paginas/Itbis.aspx">DGII ITBIS</a>
+      <div class="footer-grid">
+        <div>
+          <a class="brand" href="#inicio" aria-label="CalculaRD inicio">
+            <span class="brand-mark">RD</span>
+            <span>CalculaRD</span>
+          </a>
+          <p>Herramientas financieras para tomar mejores decisiones en República Dominicana.</p>
+        </div>
+        <nav aria-label="Enlaces principales">
+          <strong>Enlaces</strong>
+          <a href="#inicio">Inicio</a>
+          <a href="#prestamos">Financiamiento</a>
+          <a href="#itbis">ITBIS</a>
+          <a href="#sueldo">Sueldo</a>
+          <a href="#vehiculos">Vehículos</a>
+          <a href="/sobre.html">Sobre</a>
+          <a href="/contacto.html">Contacto</a>
+        </nav>
+        <nav aria-label="Legal">
+          <strong>Legal</strong>
+          <a href="/privacidad.html">Privacidad</a>
+          <a href="/terminos.html">Términos</a>
+          <a href="/disclaimer.html">Disclaimer financiero</a>
+        </nav>
+        <div>
+          <strong>Aviso</strong>
+          <p>CalculaRD es una herramienta independiente. No representa bancos, entidades financieras, DGII ni instituciones públicas. Los resultados son referenciales.</p>
+        </div>
+      </div>
+      <p class="footer-bottom">
+        © <span data-current-year>2026</span> CalculaRD. Simulaciones referenciales. Fuentes: <a href="https://dgii.gov.do/cicloContribuyente/obligacionesTributarias/principalesImpuestos/Paginas/Itbis.aspx">DGII ITBIS</a>
         y <a href="https://dgii.gov.do/cicloContribuyente/obligacionesTributarias/principalesImpuestos/Paginas/impuestoSobreRenta.aspx">DGII ISR 2026</a>.
       </p>
     </footer>
 
-    <script src="script.js?v=capacidad-1"></script>
+    <script src="script.js?v=capacidad-2"></script>
   </body>
 </html>

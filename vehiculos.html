@@ -3,18 +3,19 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Calculadora préstamo vehículo RD | CalculaRD</title>
-    <meta name="description" content="Calcula la cuota de financiamiento de un vehículo en RD con inicial, tasa y plazo.">
+    <title>Financiamiento de vehículo RD | CalculaRD</title>
+    <meta name="description" content="Simula el financiamiento de un vehículo en RD con inicial, tasa, plazo y cuota mensual.">
     <meta name="theme-color" content="#0d1117">
-    <meta property="og:title" content="Calculadora préstamo vehículo RD">
-    <meta property="og:description" content="Estima cuota mensual, intereses y total de un financiamiento de vehículo.">
+    <meta property="og:title" content="Financiamiento de vehículo RD">
+    <meta property="og:description" content="Estima cuota mensual, intereses y total antes de financiar un vehículo.">
     <meta property="og:type" content="website">
     <meta property="og:image" content="/og-image.svg">
     <meta name="twitter:card" content="summary_large_image">
     <link rel="canonical" href="https://calculard.com/vehiculos.html">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="manifest" href="/site.webmanifest">
-    <link rel="stylesheet" href="styles.css?v=capacidad-1">
+    <script>document.documentElement.dataset.theme = localStorage.getItem("calculard_theme") || "dark";</script>
+    <link rel="stylesheet" href="styles.css?v=capacidad-2">
   </head>
   <body>
     <header class="site-header">
@@ -24,7 +25,7 @@
           <span>CalculaRD</span>
         </a>
         <div class="nav-links">
-          <a href="/prestamos.html">Préstamos</a>
+          <a href="/prestamos.html">Financiamiento</a>
           <a href="/itbis.html">ITBIS</a>
           <a href="/sueldo.html">Sueldo</a>
           <a href="/vehiculos.html">Vehículos</a>
@@ -33,15 +34,15 @@
     </header>
     <main>
       <section class="page-intro">
-        <p class="eyebrow">Calculadora vehículos RD</p>
-        <h1>Calcula la cuota de tu vehículo.</h1>
-        <p>Introduce precio, inicial, tasa y plazo para estimar la cuota mensual.</p>
+        <p class="eyebrow">Financiamiento de vehículo RD</p>
+        <h1>Calcula el financiamiento de tu vehículo.</h1>
+        <p>Ingresa el precio, la inicial, la tasa y el plazo para estimar la cuota mensual.</p>
       </section>
       <section class="single-calculator">
         <article class="calculator-card" id="vehiculos">
           <div class="card-heading">
-            <p>Vehículos</p>
-            <h2>Financiamiento de auto</h2>
+            <p>Vehículo</p>
+            <h2>Simulación vehicular</h2>
           </div>
           <form class="calc-form" data-calculator="vehicle">
             <label>
@@ -62,12 +63,27 @@
             </label>
           </form>
           <div class="results" data-results="vehicle"></div>
+          <div class="share-buttons">
+            <button class="button secondary" type="button" data-copy-result="vehicle">Copiar resultado</button>
+            <button class="button whatsapp" type="button" data-whatsapp-result="vehicle">Compartir por WhatsApp</button>
+          </div>
         </article>
+      </section>
+      <section class="faq-section" aria-label="Preguntas frecuentes">
+        <div class="section-heading">
+          <p class="eyebrow">Preguntas frecuentes</p>
+          <h2>Financiamiento de vehículo</h2>
+        </div>
+        <div class="faq-grid">
+          <details><summary>¿Cuánto debo dar de inicial para un vehículo?</summary><p>Depende de la entidad y del perfil del comprador, pero una inicial mayor reduce cuota e intereses.</p></details>
+          <details><summary>¿Es mejor financiar a 4 o 5 años?</summary><p>Un plazo más largo suele bajar la cuota, pero aumenta el total de intereses pagados.</p></details>
+          <details><summary>¿Qué gastos debo considerar además de la cuota?</summary><p>Seguro, combustible, mantenimiento, matrícula, marbete, posibles comisiones y gastos de cierre.</p></details>
+        </div>
       </section>
     </main>
     <footer class="site-footer">
-      <p>Cálculo estimado. Valida condiciones finales con el dealer o entidad financiera.</p>
+      <p>Las simulaciones son referenciales y pueden variar según tasa final, seguro, comisiones y evaluación crediticia.</p>
     </footer>
-    <script src="script.js?v=capacidad-1"></script>
+    <script src="script.js?v=capacidad-2"></script>
   </body>
 </html>

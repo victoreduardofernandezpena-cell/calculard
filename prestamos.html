@@ -3,18 +3,19 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Calculadora de préstamos RD | CalculaRD</title>
-    <meta name="description" content="Calcula la cuota mensual, intereses y total pagado de un préstamo en República Dominicana.">
+    <title>Simulador de financiamiento RD | CalculaRD</title>
+    <meta name="description" content="Simula cuotas, intereses y pagos antes de financiar en República Dominicana.">
     <meta name="theme-color" content="#0d1117">
-    <meta property="og:title" content="Calculadora de préstamos RD">
-    <meta property="og:description" content="Calcula cuotas, intereses y total pagado de préstamos en RD.">
+    <meta property="og:title" content="Simulador de financiamiento RD">
+    <meta property="og:description" content="Estima cuotas mensuales, intereses y total pagado antes de financiar.">
     <meta property="og:type" content="website">
     <meta property="og:image" content="/og-image.svg">
     <meta name="twitter:card" content="summary_large_image">
     <link rel="canonical" href="https://calculard.com/prestamos.html">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="manifest" href="/site.webmanifest">
-    <link rel="stylesheet" href="styles.css?v=capacidad-1">
+    <script>document.documentElement.dataset.theme = localStorage.getItem("calculard_theme") || "dark";</script>
+    <link rel="stylesheet" href="styles.css?v=capacidad-2">
   </head>
   <body>
     <header class="site-header">
@@ -24,7 +25,7 @@
           <span>CalculaRD</span>
         </a>
         <div class="nav-links">
-          <a href="/prestamos.html">Préstamos</a>
+          <a href="/prestamos.html">Financiamiento</a>
           <a href="/itbis.html">ITBIS</a>
           <a href="/sueldo.html">Sueldo</a>
           <a href="/vehiculos.html">Vehículos</a>
@@ -33,19 +34,19 @@
     </header>
     <main>
       <section class="page-intro">
-        <p class="eyebrow">Calculadora de préstamos RD</p>
-        <h1>Calcula tu cuota mensual antes de tomar un préstamo.</h1>
-        <p>Ingresa monto, tasa y plazo para estimar la cuota, los intereses y el total pagado.</p>
+        <p class="eyebrow">Simulador de financiamiento RD</p>
+        <h1>Simula cuotas, intereses y pagos antes de financiar.</h1>
+        <p>Ingresa el monto financiado, la tasa y el plazo para estimar la cuota mensual y el total pagado.</p>
       </section>
       <section class="single-calculator">
         <article class="calculator-card" id="prestamos">
           <div class="card-heading">
-            <p>Préstamos</p>
+            <p>Financiamiento</p>
             <h2>Cuota mensual</h2>
           </div>
           <form class="calc-form" data-calculator="loan">
             <label>
-              <span>Monto del préstamo</span>
+              <span>Monto financiado</span>
               <input name="amount" type="number" min="0" step="1000" value="1000000">
             </label>
             <label>
@@ -58,12 +59,28 @@
             </label>
           </form>
           <div class="results" data-results="loan"></div>
+          <div class="share-buttons">
+            <button class="button secondary" type="button" data-copy-result="loan">Copiar resultado</button>
+            <button class="button whatsapp" type="button" data-whatsapp-result="loan">Compartir por WhatsApp</button>
+          </div>
         </article>
+      </section>
+      <section class="faq-section" aria-label="Preguntas frecuentes">
+        <div class="section-heading">
+          <p class="eyebrow">Preguntas frecuentes</p>
+          <h2>Financiamiento en RD</h2>
+        </div>
+        <div class="faq-grid">
+          <details><summary>¿Cómo se calcula una cuota mensual?</summary><p>Se estima con el monto financiado, tasa anual y plazo. La cuota puede variar por seguros, comisiones y condiciones de la entidad financiera.</p></details>
+          <details><summary>¿Qué pasa si aumento la inicial?</summary><p>Al aumentar la inicial, baja el monto financiado y normalmente también disminuyen la cuota mensual y los intereses totales.</p></details>
+          <details><summary>¿Qué es la tasa anual?</summary><p>Es el porcentaje anual usado para calcular intereses. Debe confirmarse siempre con la entidad financiera.</p></details>
+          <details><summary>¿Qué es amortización?</summary><p>Es el desglose de cada pago entre intereses, capital y balance pendiente durante el plazo del financiamiento.</p></details>
+        </div>
       </section>
     </main>
     <footer class="site-footer">
-      <p>Cálculos estimados. Verifica las condiciones finales con tu banco.</p>
+      <p>Las simulaciones son referenciales y pueden variar según tasa final, comisiones, seguros y evaluación crediticia.</p>
     </footer>
-    <script src="script.js?v=capacidad-1"></script>
+    <script src="script.js?v=capacidad-2"></script>
   </body>
 </html>

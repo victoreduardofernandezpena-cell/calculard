@@ -1,10 +1,10 @@
-const MONEY_FORMATTER = new Intl.NumberFormat("es-DO", {
-  style: "currency",
-  currency: "DOP",
+const MONEY_FORMATTER = new Intl.NumberFormat("en-US", {
+  minimumFractionDigits: 2,
   maximumFractionDigits: 2
 });
 
 const NUMBER_FORMATTER = new Intl.NumberFormat("es-DO", {
+  minimumFractionDigits: 2,
   maximumFractionDigits: 2
 });
 
@@ -25,15 +25,18 @@ const BANK_RATES = [
   { name: "BHD", rate: 12.5 },
   { name: "Scotiabank", rate: 13.25 },
   { name: "Asociación Popular", rate: 13.75 },
-  { name: "Financiera local", rate: 15.5 }
+  { name: "Entidad privada", rate: 15.5 }
 ];
 
 const HISTORY_KEY = "calculard_quote_history";
 const DEALER_KEY = "calculard_dealer_profile";
+const THEME_KEY = "calculard_theme";
 let showFullAmortization = false;
+let bankRates = BANK_RATES.map((bank) => ({ ...bank }));
+const resultSummaries = {};
 
 function money(value) {
-  return MONEY_FORMATTER.format(Number.isFinite(value) ? value : 0);
+  return `RD$${MONEY_FORMATTER.format(Number.isFinite(value) ? value : 0)}`;
 }
 
 function percent(value) {
@@ -89,6 +92,17 @@ function monthlyPayment(principal, annualRate, years) {
   return principal * (monthlyRate * growth) / (growth - 1);
 }
 
+function principalFromPayment(payment, annualRate, years) {
+  const months = years * 12;
+  const monthlyRate = annualRate / 100 / 12;
+
+  if (payment <= 0 || months <= 0) return 0;
+  if (monthlyRate === 0) return payment * months;
+
+  const growth = Math.pow(1 + monthlyRate, months);
+  return payment * ((growth - 1) / (monthlyRate * growth));
+}
+
 function calculateAnnualIsr(taxableAnnualSalary) {
   const bracket = ISR_BRACKETS.find((item) => taxableAnnualSalary <= item.upTo);
   if (!bracket || bracket.rate === 0) return 0;
@@ -116,6 +130,8 @@ function buildAmortization(principal, annualRate, years, monthsToShow = 12) {
 function renderResults(name, rows) {
   const target = document.querySelector(`[data-results="${name}"]`);
   if (!target) return;
+
+  resultSummaries[name] = rows.map((row) => `${row.label}: ${row.value}`).join("\n");
 
   target.innerHTML = rows
     .map(
@@ -157,19 +173,26 @@ function calculateItbis(form) {
 }
 
 function calculateSalary(form) {
-  const { salary } = getFormValues(form);
-  const afp = salary * AFP_RATE;
-  const sfs = salary * SFS_RATE;
-  const taxableMonthly = Math.max(salary - afp - sfs, 0);
+  const { salary, otherIncome, bonus, dependents } = getFormValues(form);
+  const grossSalary = salary || 0;
+  const extraIncome = (otherIncome || 0) + (bonus || 0);
+  const grossMonthlyIncome = grossSalary + extraIncome;
+  const afp = grossSalary * AFP_RATE;
+  const sfs = grossSalary * SFS_RATE;
+  const taxableMonthly = Math.max(grossMonthlyIncome - afp - sfs, 0);
   const annualIsr = calculateAnnualIsr(taxableMonthly * 12);
   const monthlyIsr = annualIsr / 12;
-  const netSalary = Math.max(salary - afp - sfs - monthlyIsr, 0);
+  const netSalary = Math.max(grossMonthlyIncome - afp - sfs - monthlyIsr, 0);
 
   renderResults("salary", [
+    { label: "Salario bruto mensual", value: money(grossSalary) },
+    { label: "Otros ingresos", value: money(extraIncome) },
     { label: "AFP", value: money(afp) },
     { label: "SFS", value: money(sfs) },
     { label: "ISR mensual estimado", value: money(monthlyIsr), variant: monthlyIsr > 0 ? "danger" : "" },
-    { label: "Sueldo neto", value: money(netSalary), variant: "highlight" }
+    { label: "Sueldo neto mensual", value: money(netSalary), variant: "highlight" },
+    { label: "Sueldo neto anual estimado", value: money(netSalary * 12) },
+    { label: "Dependientes informados", value: NUMBER_FORMATTER.format(dependents || 0) }
   ]);
 }
 
@@ -181,10 +204,75 @@ function calculateVehicle(form) {
   const interest = Math.max(totalPaid - financed, 0);
 
   renderResults("vehicle", [
-    { label: "Monto a financiar", value: money(financed) },
+    { label: "Monto financiado", value: money(financed) },
     { label: "Cuota mensual estimada", value: money(payment), variant: "highlight" },
     { label: "Intereses del financiamiento", value: money(interest), variant: "warning" },
     { label: "Inicial + pagos", value: money(downPayment + totalPaid) }
+  ]);
+}
+
+function calculatePersonalCapacity(form) {
+  const { income, expenses, debts, maxPercent, rate, years } = getFormValues(form);
+  const monthlyIncome = income || 0;
+  const monthlyExpenses = expenses || 0;
+  const currentDebts = debts || 0;
+  const recommendedShare = Math.max(maxPercent || 0, 0) / 100;
+  const availableAfterExpenses = Math.max(monthlyIncome - monthlyExpenses - currentDebts, 0);
+  const maxByIncome = monthlyIncome * recommendedShare;
+  const recommendedPayment = Math.max(Math.min(maxByIncome, availableAfterExpenses), 0);
+  const financeableAmount = principalFromPayment(recommendedPayment, rate || 0, years || 1);
+  const debtRatio = monthlyIncome > 0 ? ((currentDebts + recommendedPayment) / monthlyIncome) * 100 : 0;
+  const level = debtRatio <= 30 && availableAfterExpenses > recommendedPayment ? "Saludable" : debtRatio <= 40 ? "Ajustado" : "Riesgoso";
+  const variant = level === "Saludable" ? "highlight" : level === "Ajustado" ? "warning" : "danger";
+  const note = level === "Saludable"
+    ? "Tu nivel de endeudamiento estimado se mantiene en un rango prudente."
+    : level === "Ajustado"
+      ? "La cuota podría funcionar, pero deja menos margen ante imprevistos."
+      : "El escenario luce riesgoso. Considera reducir deudas, bajar el monto o ampliar la inicial.";
+
+  renderResults("personalCapacity", [
+    { label: "Cuota máxima recomendada", value: money(recommendedPayment), variant: "highlight" },
+    { label: "Monto aproximado financiable", value: money(financeableAmount) },
+    { label: "Nivel de riesgo", value: level, variant },
+    { label: "Endeudamiento estimado", value: percent(debtRatio), variant }
+  ]);
+
+  const noteNode = document.querySelector("[data-personal-capacity-note]");
+  if (noteNode) noteNode.textContent = note;
+}
+
+function calculateLateFee(form) {
+  const { payment, daysLate, monthlyLateRate, fixedCharge } = getFormValues(form);
+  const monthlyPaymentValue = payment || 0;
+  const dailyRate = (monthlyLateRate || 0) / 100 / 30;
+  const lateFee = monthlyPaymentValue * dailyRate * (daysLate || 0) + (fixedCharge || 0);
+  const total = monthlyPaymentValue + lateFee;
+
+  renderResults("lateFee", [
+    { label: "Mora estimada", value: money(lateFee), variant: "warning" },
+    { label: "Total a pagar", value: money(total), variant: "highlight" },
+    { label: "Días de atraso", value: NUMBER_FORMATTER.format(daysLate || 0) },
+    { label: "Cargo fijo incluido", value: money(fixedCharge || 0) }
+  ]);
+}
+
+function calculateSavings(form) {
+  const { initial, monthly, rate, years } = getFormValues(form);
+  const months = (years || 0) * 12;
+  const monthlyRate = (rate || 0) / 100 / 12;
+  let balance = initial || 0;
+
+  for (let month = 0; month < months; month += 1) {
+    balance = balance * (1 + monthlyRate) + (monthly || 0);
+  }
+
+  const totalContributed = (initial || 0) + (monthly || 0) * months;
+  const interest = Math.max(balance - totalContributed, 0);
+
+  renderResults("savings", [
+    { label: "Monto final estimado", value: money(balance), variant: "highlight" },
+    { label: "Intereses generados", value: money(interest), variant: "warning" },
+    { label: "Total aportado", value: money(totalContributed) }
   ]);
 }
 
@@ -280,7 +368,7 @@ function getDealerProfile() {
   const values = form ? getFormValues(form) : {};
 
   return {
-    dealerName: values.dealerName || saved.dealerName || "Tu Dealer RD",
+    dealerName: values.dealerName || saved.dealerName || "AutoPremium RD",
     dealerPhone: values.dealerPhone || saved.dealerPhone || "809-000-0000",
     salesperson: values.salesperson || saved.salesperson || "Asesor comercial",
     salesRole: values.salesRole || saved.salesRole || "Ejecutivo de ventas",
@@ -297,7 +385,7 @@ function getSelectedBank(values) {
     };
   }
 
-  return BANK_RATES.find((bank) => bank.name === values.bank) || BANK_RATES[0];
+  return bankRates.find((bank) => bank.name === values.bank) || bankRates[0];
 }
 
 function getCommercialQuote() {
@@ -315,9 +403,9 @@ function getCommercialQuote() {
   const interest = Math.max(totalPaid - financed, 0);
 
   return {
-    clientName: values.clientName || "Cliente interesado",
+    clientName: values.clientName || "Juan Pérez",
     clientPhone: values.clientPhone || "",
-    itemName: values.itemName || "Producto cotizado",
+    itemName: values.itemName || "Toyota Corolla 2021",
     price,
     downPayment,
     financed,
@@ -339,7 +427,7 @@ function quoteSummary(quote, dealer = getDealerProfile()) {
     `Producto: ${quote.itemName}`,
     `Precio: ${money(quote.price)}`,
     `Inicial: ${money(quote.downPayment)}`,
-    `Monto a financiar: ${money(quote.financed)}`,
+    `Monto financiado: ${money(quote.financed)}`,
     `Entidad: ${quote.bank.name}`,
     `Tasa referencial: ${percent(quote.bank.rate)}`,
     `Plazo: ${quote.years * 12} meses`,
@@ -354,7 +442,7 @@ function quoteLineItems(quote) {
     ["Cliente", quote.clientName],
     ["Precio", money(quote.price)],
     ["Inicial", money(quote.downPayment)],
-    ["Monto a financiar", money(quote.financed)],
+    ["Monto financiado", money(quote.financed)],
     ["Entidad", quote.bank.name],
     ["Tasa referencial", percent(quote.bank.rate)],
     ["Plazo", `${quote.years * 12} meses`],
@@ -380,7 +468,7 @@ function renderLogo(node, logo) {
 function renderCommercialResults(quote) {
   renderResults("commercial", [
     { label: "Inicial requerida", value: money(quote.downPayment) },
-    { label: "Monto a financiar", value: money(quote.financed) },
+    { label: "Monto financiado", value: money(quote.financed) },
     { label: "Tasa referencial", value: `${quote.bank.name} · ${percent(quote.bank.rate)}` },
     { label: "Cuota mensual", value: money(quote.payment), variant: "highlight" },
     { label: "Intereses estimados", value: money(quote.interest), variant: "warning" },
@@ -392,17 +480,28 @@ function renderBankTable(quote) {
   const target = document.querySelector("[data-bank-table]");
   if (!target) return;
 
-  const rates = quote.bank.isCustom ? [quote.bank, ...BANK_RATES] : BANK_RATES;
+  const rates = quote.bank.isCustom ? [quote.bank, ...bankRates] : bankRates;
 
   target.innerHTML = rates.map((bank) => {
     const payment = monthlyPayment(quote.financed, bank.rate, quote.years);
     const totalPaid = payment * quote.years * 12;
     const interest = Math.max(totalPaid - quote.financed, 0);
+    const editable = bank.isCustom ? "" : `
+          <input
+            class="bank-rate-input"
+            data-bank-rate="${escapeHtml(bank.name)}"
+            type="number"
+            min="0"
+            step="0.01"
+            value="${bank.rate}"
+            aria-label="Tasa anual ${escapeHtml(bank.name)}"
+          >
+        `;
 
     return `
       <tr>
-        <td>${bank.name}</td>
-        <td>${percent(bank.rate)}</td>
+        <td>${escapeHtml(bank.name)}</td>
+        <td>${editable || percent(bank.rate)}</td>
         <td>${money(payment)}</td>
         <td>${money(interest)}</td>
       </tr>
@@ -666,7 +765,7 @@ function initializeCommercialDashboard() {
   const bankSelect = commercialForm.elements.bank;
   if (bankSelect.options.length === 0) {
     bankSelect.innerHTML = [
-      ...BANK_RATES.map((bank) => `<option value="${bank.name}">${bank.name} · ${percent(bank.rate)}</option>`),
+      ...bankRates.map((bank) => `<option value="${bank.name}">${bank.name} · ${percent(bank.rate)}</option>`),
       '<option value="custom">Tasa personalizada</option>'
     ].join("");
   }
@@ -695,6 +794,17 @@ function initializeCommercialDashboard() {
   document.querySelector("[data-whatsapp-quote]")?.addEventListener("click", sendCurrentQuoteToWhatsapp);
   document.querySelector("[data-save-image]")?.addEventListener("click", saveCurrentQuoteAsImage);
   document.querySelector("[data-print-quote]")?.addEventListener("click", () => window.print());
+  document.querySelector("[data-bank-table]")?.addEventListener("change", (event) => {
+    const input = event.target.closest("[data-bank-rate]");
+    if (!input) return;
+
+    bankRates = bankRates.map((bank) => (
+      bank.name === input.dataset.bankRate
+        ? { ...bank, rate: Math.max(Number(input.value) || 0, 0) }
+        : bank
+    ));
+    updateCommercialDashboard();
+  });
   document.querySelector("[data-toggle-amortization]")?.addEventListener("click", () => {
     showFullAmortization = !showFullAmortization;
     updateCommercialDashboard();
@@ -766,7 +876,10 @@ const calculators = {
   loan: calculateLoan,
   itbis: calculateItbis,
   salary: calculateSalary,
-  vehicle: calculateVehicle
+  vehicle: calculateVehicle,
+  personalCapacity: calculatePersonalCapacity,
+  lateFee: calculateLateFee,
+  savings: calculateSavings
 };
 
 document.querySelectorAll("[data-calculator]").forEach((form) => {
@@ -778,8 +891,60 @@ document.querySelectorAll("[data-calculator]").forEach((form) => {
   update();
 });
 
+async function copySimpleResult(name) {
+  const text = resultSummaries[name];
+  if (!text) return;
+
+  try {
+    await navigator.clipboard.writeText(`CalculaRD\n${text}`);
+  } catch (error) {
+    // Clipboard may be unavailable outside secure contexts.
+  }
+}
+
+function shareSimpleResult(name) {
+  const text = resultSummaries[name];
+  if (!text) return;
+
+  window.open(`https://wa.me/?text=${encodeURIComponent(`CalculaRD\n${text}`)}`, "_blank", "noopener,noreferrer");
+}
+
+function initializeShareActions() {
+  document.querySelectorAll("[data-copy-result]").forEach((button) => {
+    button.addEventListener("click", () => copySimpleResult(button.dataset.copyResult));
+  });
+
+  document.querySelectorAll("[data-whatsapp-result]").forEach((button) => {
+    button.addEventListener("click", () => shareSimpleResult(button.dataset.whatsappResult));
+  });
+}
+
+function applyTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  try {
+    localStorage.setItem(THEME_KEY, theme);
+  } catch (error) {
+    // Theme persistence is optional.
+  }
+  document.querySelector("[data-theme-toggle]")?.replaceChildren(theme === "light" ? "Modo oscuro" : "Modo claro");
+}
+
+function initializeTheme() {
+  const savedTheme = localStorage.getItem(THEME_KEY) || "dark";
+  applyTheme(savedTheme);
+  document.querySelector("[data-theme-toggle]")?.addEventListener("click", () => {
+    applyTheme(document.documentElement.dataset.theme === "light" ? "dark" : "light");
+  });
+}
+
 initializeCommercialDashboard();
 initializeAffordabilityCalculator();
+initializeShareActions();
+initializeTheme();
+
+document.querySelectorAll("[data-current-year]").forEach((node) => {
+  node.textContent = String(new Date().getFullYear());
+});
 
 window.addEventListener("load", () => {
   document.body.classList.add("app-ready");

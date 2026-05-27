@@ -1,4 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="12" fill="#2bd4a0"/>
-  <text x="32" y="39" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="800" fill="#06120f">RD</text>
+  <defs>
+    <linearGradient id="bg" x1="10" y1="8" x2="56" y2="58" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#10251f"/>
+      <stop offset="1" stop-color="#06120f"/>
+    </linearGradient>
+    <linearGradient id="mark" x1="16" y1="14" x2="48" y2="50" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2bd4a0"/>
+      <stop offset="1" stop-color="#f4c95d"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#bg)"/>
+  <path d="M18 44V20h15.5c7.4 0 12.5 4.9 12.5 12s-5.1 12-12.5 12H18Zm8-7h7.1c3.1 0 5-2 5-5s-1.9-5-5-5H26v10Z" fill="url(#mark)"/>
+  <path d="M44 44 34 32h9.4L54 44H44Z" fill="#f4c95d"/>
 </svg>

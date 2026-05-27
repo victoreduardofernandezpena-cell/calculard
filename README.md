@@ -1,21 +1,22 @@
 # CalculaRD
 
-Web estática con calculadoras rápidas para República Dominicana:
+Web estática con simulaciones financieras para República Dominicana:
 
-- Préstamos
+- Financiamiento
 - ITBIS
 - Sueldo neto RD
 - Financiamiento de vehículos
-- Comparador de tasas referenciales
+- Comparador de entidades con tasas editables
 - Tabla de amortización
 - Cotización imprimible en PDF desde el navegador
+- Evaluador de capacidad de compra de vehículo
 - Modo dealer con nombre, teléfono, vendedor y logo
 - Historial local de simulaciones
 
 ## Archivos principales
 
 - `index.html`: página principal con todas las calculadoras.
-- `prestamos.html`: página SEO para préstamos.
+- `prestamos.html`: página SEO para financiamiento.
 - `itbis.html`: página SEO para ITBIS.
 - `sueldo.html`: página SEO para sueldo neto.
 - `vehiculos.html`: página SEO para vehículos.
@@ -49,4 +50,4 @@ Abre `index.html` en el navegador. No necesita servidor, instalación ni base de
 - DGII ITBIS: tasa general de 18%.
 - DGII ISR 2026: escala anual de retención para asalariados.
 
-Los cálculos son estimados y deben verificarse con el banco, empleador o asesor fiscal correspondiente.
+Las simulaciones son referenciales y deben verificarse con el banco, empleador o asesor fiscal correspondiente.

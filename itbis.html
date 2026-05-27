@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Calculadora ITBIS RD 18% | CalculaRD</title>
-    <meta name="description" content="Calcula el ITBIS 18% en República Dominicana: agrega o extrae el impuesto de un precio.">
+    <meta name="description" content="Estima el ITBIS 18% en República Dominicana: agrega o extrae el impuesto de un precio.">
     <meta name="theme-color" content="#0d1117">
     <meta property="og:title" content="Calculadora ITBIS RD 18%">
     <meta property="og:description" content="Agrega o extrae ITBIS de un precio en segundos.">
@@ -14,7 +14,8 @@
     <link rel="canonical" href="https://calculard.com/itbis.html">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="manifest" href="/site.webmanifest">
-    <link rel="stylesheet" href="styles.css?v=capacidad-1">
+    <script>document.documentElement.dataset.theme = localStorage.getItem("calculard_theme") || "dark";</script>
+    <link rel="stylesheet" href="styles.css?v=capacidad-2">
   </head>
   <body>
     <header class="site-header">
@@ -24,7 +25,7 @@
           <span>CalculaRD</span>
         </a>
         <div class="nav-links">
-          <a href="/prestamos.html">Préstamos</a>
+          <a href="/prestamos.html">Financiamiento</a>
           <a href="/itbis.html">ITBIS</a>
           <a href="/sueldo.html">Sueldo</a>
           <a href="/vehiculos.html">Vehículos</a>
@@ -57,12 +58,27 @@
             </label>
           </form>
           <div class="results" data-results="itbis"></div>
+          <div class="share-buttons">
+            <button class="button secondary" type="button" data-copy-result="itbis">Copiar resultado</button>
+            <button class="button whatsapp" type="button" data-whatsapp-result="itbis">Compartir por WhatsApp</button>
+          </div>
         </article>
+      </section>
+      <section class="faq-section" aria-label="Preguntas frecuentes">
+        <div class="section-heading">
+          <p class="eyebrow">Preguntas frecuentes</p>
+          <h2>ITBIS en República Dominicana</h2>
+        </div>
+        <div class="faq-grid">
+          <details><summary>¿Cuál es el ITBIS en República Dominicana?</summary><p>La tasa general de ITBIS es 18%, aunque pueden existir bienes o servicios con tratamientos diferentes.</p></details>
+          <details><summary>¿Cómo se calcula el 18% de ITBIS?</summary><p>Multiplica el precio sin impuesto por 0.18. Luego suma ese monto al precio base para obtener el total.</p></details>
+          <details><summary>¿Cómo sacar el ITBIS incluido de un precio?</summary><p>Divide el precio total entre 1.18 para obtener la base imponible. La diferencia entre total y base es el ITBIS.</p></details>
+        </div>
       </section>
     </main>
     <footer class="site-footer">
-      <p>Fuente: DGII. Cálculo estimado con tasa general de ITBIS de 18%.</p>
+      <p>Fuente: DGII. Simulación referencial con tasa general de ITBIS de 18%.</p>
     </footer>
-    <script src="script.js?v=capacidad-1"></script>
+    <script src="script.js?v=capacidad-2"></script>
   </body>
 </html>

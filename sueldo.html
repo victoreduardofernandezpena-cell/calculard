@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Calculadora sueldo neto RD 2026 | CalculaRD</title>
-    <meta name="description" content="Calcula sueldo neto en República Dominicana con AFP, SFS e ISR estimado según escala DGII 2026.">
+    <meta name="description" content="Estima salario neto en República Dominicana con AFP, SFS e ISR según escala DGII 2026.">
     <meta name="theme-color" content="#0d1117">
     <meta property="og:title" content="Calculadora sueldo neto RD 2026">
     <meta property="og:description" content="Estima AFP, SFS, ISR y salario neto mensual en RD.">
@@ -14,7 +14,8 @@
     <link rel="canonical" href="https://calculard.com/sueldo.html">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="manifest" href="/site.webmanifest">
-    <link rel="stylesheet" href="styles.css?v=capacidad-1">
+    <script>document.documentElement.dataset.theme = localStorage.getItem("calculard_theme") || "dark";</script>
+    <link rel="stylesheet" href="styles.css?v=capacidad-2">
   </head>
   <body>
     <header class="site-header">
@@ -24,7 +25,7 @@
           <span>CalculaRD</span>
         </a>
         <div class="nav-links">
-          <a href="/prestamos.html">Préstamos</a>
+          <a href="/prestamos.html">Financiamiento</a>
           <a href="/itbis.html">ITBIS</a>
           <a href="/sueldo.html">Sueldo</a>
           <a href="/vehiculos.html">Vehículos</a>
@@ -35,7 +36,7 @@
       <section class="page-intro">
         <p class="eyebrow">Calculadora sueldo RD</p>
         <h1>Estima tu sueldo neto mensual.</h1>
-        <p>Calcula AFP, SFS, ISR mensual estimado y lo que recibirías luego de descuentos.</p>
+        <p>Estima AFP, SFS, ISR mensual y el salario disponible luego de descuentos.</p>
       </section>
       <section class="single-calculator">
         <article class="calculator-card" id="sueldo">
@@ -48,15 +49,43 @@
               <span>Salario mensual bruto</span>
               <input name="salary" type="number" min="0" step="1000" value="75000">
             </label>
+            <label>
+              <span>Otros ingresos mensuales</span>
+              <input name="otherIncome" type="number" min="0" step="1000" value="0">
+            </label>
+            <label>
+              <span>Bonificación promedio mensual</span>
+              <input name="bonus" type="number" min="0" step="1000" value="0">
+            </label>
+            <label>
+              <span>Dependientes</span>
+              <input name="dependents" type="number" min="0" step="1" value="0">
+            </label>
           </form>
           <div class="results" data-results="salary"></div>
-          <p class="note">ISR estimado con escala anual DGII 2026 luego de AFP y SFS.</p>
+          <div class="share-buttons">
+            <button class="button secondary" type="button" data-copy-result="salary">Copiar resultado</button>
+            <button class="button whatsapp" type="button" data-whatsapp-result="salary">Compartir por WhatsApp</button>
+          </div>
+          <p class="note">Esta estimación puede variar según topes contributivos, beneficios, empleador y cambios fiscales.</p>
         </article>
+      </section>
+      <section class="faq-section" aria-label="Preguntas frecuentes">
+        <div class="section-heading">
+          <p class="eyebrow">Preguntas frecuentes</p>
+          <h2>Sueldo neto en RD</h2>
+        </div>
+        <div class="faq-grid">
+          <details><summary>¿Qué descuentos se aplican al salario en RD?</summary><p>Los descuentos comunes incluyen AFP, SFS e ISR cuando el ingreso gravable supera la escala aplicable.</p></details>
+          <details><summary>¿Qué es AFP?</summary><p>Es el aporte al sistema de pensiones. En esta herramienta se estima con una tasa referencial sobre el salario.</p></details>
+          <details><summary>¿Qué es SFS?</summary><p>Es el aporte al Seguro Familiar de Salud. El resultado puede variar por topes y reglas vigentes.</p></details>
+          <details><summary>¿Cuándo se paga ISR?</summary><p>El ISR aplica cuando el ingreso anual gravable supera el tramo exento definido por la normativa fiscal.</p></details>
+        </div>
       </section>
     </main>
     <footer class="site-footer">
-      <p>Cálculo estimado. Valida descuentos finales con tu empleador o asesor fiscal.</p>
+      <p>La simulación es referencial y puede variar según empleador, beneficios, retenciones y normativa fiscal aplicable.</p>
     </footer>
-    <script src="script.js?v=capacidad-1"></script>
+    <script src="script.js?v=capacidad-2"></script>
   </body>
 </html>
