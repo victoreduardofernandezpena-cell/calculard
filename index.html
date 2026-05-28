@@ -23,7 +23,7 @@
     <script>
       document.documentElement.dataset.theme = localStorage.getItem("calculard_theme") || "dark";
     </script>
-    <link rel="stylesheet" href="styles.css?v=redesign-2">
+    <link rel="stylesheet" href="styles.css?v=polish-2">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -56,13 +56,9 @@
           <span>CalculaRD</span>
         </a>
         <div class="nav-links">
-          <a href="#dashboard">Cotizaciones</a>
-          <a href="#prestamos">Financiamiento</a>
-          <a href="#itbis">ITBIS</a>
-          <a href="#sueldo">Sueldo</a>
-          <a href="#vehiculos">Vehículos</a>
-          <a href="#capacidad">Capacidad</a>
-          <a href="#mora">Mora</a>
+          <a href="#inicio">Inicio</a>
+          <a href="#calculadoras">Calculadoras</a>
+          <a href="#dashboard">Cotizador</a>
           <a href="/sobre.html">Sobre</a>
           <button class="theme-toggle" type="button" data-theme-toggle aria-label="Cambiar modo claro u oscuro">Modo claro</button>
         </div>
@@ -81,6 +77,7 @@
             Calculadoras financieras diseñadas para República Dominicana.
             Simula, compara y cotiza antes de decidir.
           </p>
+          <p class="hero-trust">Sin registro. Sin subir datos. Todo se calcula en tu navegador.</p>
           <div class="hero-actions" aria-label="Ir a calculadoras">
             <a class="button primary" href="#dashboard">Abrir centro de cotizaciones</a>
             <a class="button secondary" href="#capacidad">Evaluar capacidad</a>
@@ -121,6 +118,13 @@
             <span>Comparador, cotizador y calculadoras integradas</span>
           </div>
         </aside>
+      </section>
+
+      <section class="tools-section" id="calculadoras" aria-label="Herramientas principales">
+        <div class="section-heading compact-heading">
+          <p class="eyebrow">Herramientas principales</p>
+          <h2>Calculadoras para simular, comparar y decidir con contexto.</h2>
+        </div>
         <div class="quick-panel dashboard-cards" aria-label="Herramientas principales">
           <a href="#prestamos">
             <i aria-hidden="true">
@@ -184,7 +188,7 @@
       <section class="dashboard" id="dashboard" aria-label="Dashboard comercial">
         <div class="section-heading">
           <p class="eyebrow">Panel Comercial</p>
-          <h2>Centro de cotizaciones para dealers, entidades financieras y asesores.</h2>
+          <h2>Centro de cotizaciones para vendedores, agencias, entidades financieras y asesores.</h2>
           <p>
             Simula financiamientos, compara entidades, genera una cotización imprimible
             y conserva las últimas simulaciones en este navegador.
@@ -317,7 +321,7 @@
                 <tbody data-bank-table></tbody>
               </table>
             </div>
-            <p class="note">Tasas referenciales editables. Confirma siempre la tasa final con la entidad financiera.</p>
+            <p class="note important-note">Las tasas mostradas son ejemplos para simulación y no constituyen oferta oficial. Confirma siempre la tasa final con la entidad financiera.</p>
           </article>
 
           <article class="data-panel quote-preview" data-quote-preview>
@@ -467,7 +471,12 @@
         </article>
       </section>
 
-      <section class="calculator-grid" aria-label="Calculadoras">
+      <section class="personal-calculators" aria-label="Calculadoras personales">
+        <div class="section-heading compact-heading">
+          <p class="eyebrow">Calculadoras personales</p>
+          <h2>Módulos para estimar cuotas, impuestos, sueldo, capacidad, mora y ahorro.</h2>
+        </div>
+        <div class="calculator-grid">
         <article class="calculator-card" id="prestamos">
           <div class="card-heading">
             <span class="section-icon" aria-hidden="true">P</span>
@@ -686,6 +695,7 @@
             <button class="button whatsapp" type="button" data-whatsapp-result="savings">Compartir por WhatsApp</button>
           </div>
         </article>
+        </div>
       </section>
 
       <section class="faq-section" aria-label="Preguntas frecuentes">
@@ -721,30 +731,30 @@
             <span class="brand-mark">RD</span>
             <span>CalculaRD</span>
           </a>
-          <p>Herramientas financieras para tomar mejores decisiones en República Dominicana.</p>
+          <p>Calculadoras financieras referenciales para República Dominicana.</p>
         </div>
-        <nav aria-label="Enlaces principales">
-          <strong>Enlaces</strong>
-          <a href="#inicio">Inicio</a>
+        <nav aria-label="Herramientas">
+          <strong>Herramientas</strong>
           <a href="#prestamos">Financiamiento</a>
           <a href="#itbis">ITBIS</a>
           <a href="#sueldo">Sueldo</a>
           <a href="#vehiculos">Vehículos</a>
-          <a href="/sobre.html">Sobre</a>
-          <a href="/contacto.html">Contacto</a>
+          <a href="#capacidad">Capacidad</a>
+          <a href="#mora">Mora</a>
         </nav>
         <nav aria-label="Legal">
           <strong>Legal</strong>
           <a href="/privacidad.html">Privacidad</a>
           <a href="/terminos.html">Términos</a>
           <a href="/disclaimer.html">Disclaimer financiero</a>
+          <a href="/contacto.html">Contacto</a>
+          <a href="/sobre.html">Sobre</a>
         </nav>
-        <div>
-          <strong>Aviso</strong>
-          <p>CalculaRD es una herramienta independiente. No representa bancos, entidades financieras, DGII ni instituciones públicas. Los resultados son referenciales.</p>
-        </div>
       </div>
       <p class="footer-bottom">
+        CalculaRD es una herramienta independiente. No representa bancos, entidades financieras, DGII ni instituciones públicas. Los resultados son referenciales.
+      </p>
+      <p class="footer-bottom footer-meta">
         © <span data-current-year>2026</span> CalculaRD. Simulaciones referenciales. Fuentes: <a href="https://dgii.gov.do/cicloContribuyente/obligacionesTributarias/principalesImpuestos/Paginas/Itbis.aspx">DGII ITBIS</a>
         y <a href="https://dgii.gov.do/cicloContribuyente/obligacionesTributarias/principalesImpuestos/Paginas/impuestoSobreRenta.aspx">DGII ISR 2026</a>.
       </p>
