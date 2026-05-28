@@ -3261,3 +3261,126 @@ th {
     padding-inline: 0;
   }
 }
+
+/* Final overflow guard for all calculator and commercial result cards */
+.results,
+.results.compact,
+[data-results="commercial"] {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  min-width: 0;
+}
+
+.result-row,
+.results.compact .result-row,
+.affordability-output .results.compact .result-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  min-width: 0;
+  min-height: 72px;
+}
+
+.result-row span,
+.result-row strong {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  white-space: normal;
+  line-height: 1.35;
+}
+
+.result-row span {
+  flex: 1 1 120px;
+}
+
+.result-row strong {
+  flex: 1 1 130px;
+  text-align: right;
+}
+
+[data-results="commercial"] .result-row {
+  min-height: 92px;
+}
+
+[data-results="commercial"] .result-row span,
+[data-results="commercial"] .result-row strong,
+.results.compact .result-row span,
+.results.compact .result-row strong {
+  flex-basis: 100%;
+}
+
+[data-results="commercial"] .result-row strong,
+.results.compact .result-row strong {
+  text-align: left;
+}
+
+@media (max-width: 900px) {
+  .results,
+  .results.compact,
+  [data-results="commercial"] {
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .results,
+  .results.compact,
+  [data-results="commercial"] {
+    grid-template-columns: 1fr;
+  }
+
+  .result-row,
+  .results.compact .result-row,
+  .affordability-output .results.compact .result-row {
+    align-items: flex-start;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    min-height: auto;
+  }
+
+  .result-row span,
+  .result-row strong {
+    flex-basis: auto;
+    width: 100%;
+  }
+
+  .result-row strong {
+    text-align: left;
+  }
+}
+
+/* Keep wide comparison tables inside their own horizontal scroller */
+.dashboard-layout,
+.dashboard-layout.lower,
+.data-panel,
+.quote-builder,
+.settings-panel,
+.table-wrap {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 760px) {
+  .dashboard-layout,
+  .dashboard-layout.lower {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .data-panel,
+  .quote-builder,
+  .settings-panel,
+  .calculator-card {
+    width: 100%;
+  }
+}
