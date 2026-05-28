@@ -23,7 +23,7 @@
     <script>
       document.documentElement.dataset.theme = localStorage.getItem("calculard_theme") || "dark";
     </script>
-    <link rel="stylesheet" href="styles.css?v=polish-2">
+    <link rel="stylesheet" href="styles.css?v=polish-3">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -93,17 +93,17 @@
           </div>
           <div class="metric-card primary-metric">
             <span>Cuota estimada</span>
-            <strong>RD$ 31,870</strong>
-            <small>Financiamiento vehicular a 5 años</small>
+            <strong>Ingresa tus datos</strong>
+            <small>Calcula una simulación referencial</small>
           </div>
           <div class="hero-metrics">
             <div class="metric-card">
               <span>Inicial</span>
-              <strong>20%</strong>
+              <strong>Inicial</strong>
             </div>
             <div class="metric-card">
               <span>Tasa anual</span>
-              <strong>12.5%</strong>
+              <strong>Tasa</strong>
             </div>
           </div>
           <div class="mini-chart" aria-hidden="true">
@@ -205,19 +205,19 @@
             <form class="calc-form stacked" data-dealer-form>
               <label>
                 <span>Nombre del negocio</span>
-                <input name="dealerName" type="text" value="AutoPremium RD">
+                <input name="dealerName" type="text" placeholder="Nombre de tu negocio">
               </label>
               <label>
                 <span>Teléfono o WhatsApp</span>
-                <input name="dealerPhone" type="text" value="809-000-0000">
+                <input name="dealerPhone" type="text" placeholder="Teléfono o WhatsApp">
               </label>
               <label>
                 <span>Nombre del vendedor</span>
-                <input name="salesperson" type="text" value="Asesor comercial">
+                <input name="salesperson" type="text" placeholder="Nombre del vendedor">
               </label>
               <label>
                 <span>Cargo o área</span>
-                <input name="salesRole" type="text" value="Ejecutivo de ventas">
+                <input name="salesRole" type="text" placeholder="Cargo o área">
               </label>
               <label>
                 <span>Logo del negocio</span>
@@ -227,8 +227,8 @@
             <div class="dealer-preview">
               <div class="dealer-logo" data-dealer-logo>RD</div>
               <div>
-              <strong data-dealer-name>AutoPremium RD</strong>
-                <span data-dealer-phone>809-000-0000</span>
+              <strong data-dealer-name>Tu negocio</strong>
+                <span data-dealer-phone>Teléfono o WhatsApp</span>
               </div>
             </div>
           </aside>
@@ -242,27 +242,28 @@
             <form class="calc-form" data-commercial-form>
               <label>
                 <span>Cliente</span>
-                <input name="clientName" type="text" value="Juan Pérez">
+                <input name="clientName" type="text" placeholder="Nombre del cliente">
               </label>
               <label>
                 <span>WhatsApp del cliente</span>
-                <input name="clientPhone" type="text" value="">
+                <input name="clientPhone" type="text" placeholder="WhatsApp del cliente">
               </label>
               <label>
                 <span>Producto o vehículo</span>
-                <input name="itemName" type="text" value="Toyota Corolla 2021">
+                <input name="itemName" type="text" placeholder="Producto o vehículo">
               </label>
               <label>
                 <span>Precio</span>
-                <input name="price" type="number" min="0" step="5000" value="1500000">
+                <input name="price" type="number" min="0" step="5000" placeholder="Precio">
               </label>
               <label>
                 <span>Inicial</span>
-                <input name="downPayment" type="number" min="0" step="5000" value="300000">
+                <input name="downPayment" type="number" min="0" step="5000" placeholder="Inicial">
               </label>
               <label>
                 <span>Entidad financiera</span>
                 <select name="bank">
+                  <option value="" selected>Selecciona una entidad</option>
                   <option value="Banreservas">Banreservas · 11.9%</option>
                   <option value="Banco Popular">Banco Popular · 12.25%</option>
                   <option value="BHD">BHD · 12.5%</option>
@@ -274,11 +275,11 @@
               </label>
               <label class="custom-rate-field" data-custom-rate-field hidden>
                 <span>Tasa anual personalizada (%)</span>
-                <input name="customRate" type="number" min="0" step="0.01" value="12">
+                <input name="customRate" type="number" min="0" step="0.01" placeholder="Tasa anual">
               </label>
               <label>
                 <span>Plazo en años</span>
-                <input name="years" type="number" min="1" max="10" step="1" value="5">
+                <input name="years" type="number" min="1" max="10" step="1" placeholder="Años">
               </label>
             </form>
 
@@ -328,13 +329,13 @@
             <div class="quote-brand">
               <div class="dealer-logo" data-quote-logo>RD</div>
               <div>
-              <strong data-quote-dealer>AutoPremium RD</strong>
-                <span data-quote-contact>809-000-0000</span>
+              <strong data-quote-dealer>Tu negocio</strong>
+                <span data-quote-contact>Teléfono o WhatsApp</span>
               </div>
             </div>
             <div class="quote-body">
               <p class="eyebrow">Cotización</p>
-              <h2 data-quote-title>Toyota Corolla 2021</h2>
+              <h2 data-quote-title>Cotización pendiente</h2>
               <p class="quote-date" data-quote-date></p>
               <div class="quote-lines" data-quote-lines></div>
               <div class="advisor-box">
@@ -412,43 +413,43 @@
               <form class="calc-form affordability-form" data-affordability-form>
                 <label>
                   <span>Ingreso mensual neto</span>
-                  <input name="income" type="number" min="0" step="1000" value="200000">
+                  <input name="income" type="number" min="0" step="1000" placeholder="Ingreso mensual neto">
                 </label>
                 <label>
                   <span>Gastos fijos mensuales</span>
-                  <input name="expenses" type="number" min="0" step="1000" value="130000">
+                  <input name="expenses" type="number" min="0" step="1000" placeholder="Gastos fijos mensuales">
                 </label>
                 <label>
                   <span>Ahorro mínimo mensual</span>
-                  <input name="savingsGoal" type="number" min="0" step="1000" value="20000">
+                  <input name="savingsGoal" type="number" min="0" step="1000" placeholder="Ahorro mínimo mensual">
                 </label>
                 <label>
                   <span>Precio del vehículo</span>
-                  <input name="vehiclePrice" type="number" min="0" step="5000" value="6000000">
+                  <input name="vehiclePrice" type="number" min="0" step="5000" placeholder="Precio del vehículo">
                 </label>
                 <label>
                   <span>Inicial</span>
-                  <input name="downPayment" type="number" min="0" step="5000" value="1200000">
+                  <input name="downPayment" type="number" min="0" step="5000" placeholder="Inicial">
                 </label>
                 <label>
                   <span>Tasa anual (%)</span>
-                  <input name="rate" type="number" min="0" step="0.01" value="13">
+                  <input name="rate" type="number" min="0" step="0.01" placeholder="Tasa anual">
                 </label>
                 <label>
                   <span>Plazo en años</span>
-                  <input name="years" type="number" min="1" max="10" step="1" value="5">
+                  <input name="years" type="number" min="1" max="10" step="1" placeholder="Años">
                 </label>
                 <label>
                   <span>Seguro mensual</span>
-                  <input name="insurance" type="number" min="0" step="500" value="12000">
+                  <input name="insurance" type="number" min="0" step="500" placeholder="Seguro mensual">
                 </label>
                 <label>
                   <span>Combustible mensual</span>
-                  <input name="fuel" type="number" min="0" step="500" value="18000">
+                  <input name="fuel" type="number" min="0" step="500" placeholder="Combustible mensual">
                 </label>
                 <label>
                   <span>Mantenimiento mensual</span>
-                  <input name="maintenance" type="number" min="0" step="500" value="8000">
+                  <input name="maintenance" type="number" min="0" step="500" placeholder="Mantenimiento mensual">
                 </label>
               </form>
               <div class="action-row affordability-actions">
@@ -486,15 +487,15 @@
           <form class="calc-form" data-calculator="loan">
             <label>
               <span>Monto financiado</span>
-              <input name="amount" type="number" min="0" step="1000" value="1000000">
+              <input name="amount" type="number" min="0" step="1000" placeholder="Monto financiado">
             </label>
             <label>
               <span>Tasa anual (%)</span>
-              <input name="rate" type="number" min="0" step="0.01" value="12.5">
+              <input name="rate" type="number" min="0" step="0.01" placeholder="Tasa anual">
             </label>
             <label>
               <span>Plazo en años</span>
-              <input name="years" type="number" min="1" max="40" step="1" value="5">
+              <input name="years" type="number" min="1" max="40" step="1" placeholder="Años">
             </label>
           </form>
           <div class="results" data-results="loan"></div>
@@ -513,7 +514,7 @@
           <form class="calc-form" data-calculator="itbis">
             <label>
               <span>Precio</span>
-              <input name="price" type="number" min="0" step="100" value="10000">
+              <input name="price" type="number" min="0" step="100" placeholder="Precio">
             </label>
             <label>
               <span>Modo</span>
@@ -539,19 +540,19 @@
           <form class="calc-form" data-calculator="salary">
             <label>
               <span>Salario mensual bruto</span>
-              <input name="salary" type="number" min="0" step="1000" value="75000">
+              <input name="salary" type="number" min="0" step="1000" placeholder="Salario mensual bruto">
             </label>
             <label>
               <span>Otros ingresos mensuales</span>
-              <input name="otherIncome" type="number" min="0" step="1000" value="0">
+              <input name="otherIncome" type="number" min="0" step="1000" placeholder="Otros ingresos mensuales">
             </label>
             <label>
               <span>Bonificación promedio mensual</span>
-              <input name="bonus" type="number" min="0" step="1000" value="0">
+              <input name="bonus" type="number" min="0" step="1000" placeholder="Bonificación promedio mensual">
             </label>
             <label>
               <span>Dependientes</span>
-              <input name="dependents" type="number" min="0" step="1" value="0">
+              <input name="dependents" type="number" min="0" step="1" placeholder="Dependientes">
             </label>
           </form>
           <div class="results" data-results="salary"></div>
@@ -571,19 +572,19 @@
           <form class="calc-form" data-calculator="vehicle">
             <label>
               <span>Precio del vehículo</span>
-              <input name="price" type="number" min="0" step="5000" value="1500000">
+              <input name="price" type="number" min="0" step="5000" placeholder="Precio del vehículo">
             </label>
             <label>
               <span>Inicial</span>
-              <input name="downPayment" type="number" min="0" step="5000" value="300000">
+              <input name="downPayment" type="number" min="0" step="5000" placeholder="Inicial">
             </label>
             <label>
               <span>Tasa anual (%)</span>
-              <input name="rate" type="number" min="0" step="0.01" value="14">
+              <input name="rate" type="number" min="0" step="0.01" placeholder="Tasa anual">
             </label>
             <label>
               <span>Plazo en años</span>
-              <input name="years" type="number" min="1" max="10" step="1" value="5">
+              <input name="years" type="number" min="1" max="10" step="1" placeholder="Años">
             </label>
           </form>
           <div class="results" data-results="vehicle"></div>
@@ -602,27 +603,27 @@
           <form class="calc-form" data-calculator="personalCapacity">
             <label>
               <span>Ingreso neto mensual</span>
-              <input name="income" type="number" min="0" step="1000" value="80000">
+              <input name="income" type="number" min="0" step="1000" placeholder="Ingreso neto mensual">
             </label>
             <label>
               <span>Gastos mensuales</span>
-              <input name="expenses" type="number" min="0" step="1000" value="30000">
+              <input name="expenses" type="number" min="0" step="1000" placeholder="Gastos mensuales">
             </label>
             <label>
               <span>Deudas actuales mensuales</span>
-              <input name="debts" type="number" min="0" step="1000" value="15000">
+              <input name="debts" type="number" min="0" step="1000" placeholder="Deudas actuales mensuales">
             </label>
             <label>
               <span>Máximo recomendado para cuota (%)</span>
-              <input name="maxPercent" type="number" min="1" max="60" step="1" value="30">
+              <input name="maxPercent" type="number" min="1" max="60" step="1" placeholder="Porcentaje recomendado">
             </label>
             <label>
               <span>Tasa anual (%)</span>
-              <input name="rate" type="number" min="0" step="0.01" value="14">
+              <input name="rate" type="number" min="0" step="0.01" placeholder="Tasa anual">
             </label>
             <label>
               <span>Plazo en años</span>
-              <input name="years" type="number" min="1" max="10" step="1" value="5">
+              <input name="years" type="number" min="1" max="10" step="1" placeholder="Años">
             </label>
           </form>
           <div class="results" data-results="personalCapacity"></div>
@@ -642,19 +643,19 @@
           <form class="calc-form" data-calculator="lateFee">
             <label>
               <span>Cuota mensual</span>
-              <input name="payment" type="number" min="0" step="500" value="15000">
+              <input name="payment" type="number" min="0" step="500" placeholder="Cuota mensual">
             </label>
             <label>
               <span>Días de atraso</span>
-              <input name="daysLate" type="number" min="0" step="1" value="15">
+              <input name="daysLate" type="number" min="0" step="1" placeholder="Días de atraso">
             </label>
             <label>
               <span>Porcentaje de mora mensual (%)</span>
-              <input name="monthlyLateRate" type="number" min="0" step="0.01" value="5">
+              <input name="monthlyLateRate" type="number" min="0" step="0.01" placeholder="Mora mensual">
             </label>
             <label>
               <span>Cargo fijo opcional</span>
-              <input name="fixedCharge" type="number" min="0" step="100" value="0">
+              <input name="fixedCharge" type="number" min="0" step="100" placeholder="Cargo fijo opcional">
             </label>
           </form>
           <div class="results" data-results="lateFee"></div>
@@ -674,19 +675,19 @@
           <form class="calc-form" data-calculator="savings">
             <label>
               <span>Monto inicial</span>
-              <input name="initial" type="number" min="0" step="1000" value="100000">
+              <input name="initial" type="number" min="0" step="1000" placeholder="Monto inicial">
             </label>
             <label>
               <span>Aporte mensual</span>
-              <input name="monthly" type="number" min="0" step="500" value="5000">
+              <input name="monthly" type="number" min="0" step="500" placeholder="Aporte mensual">
             </label>
             <label>
               <span>Tasa anual (%)</span>
-              <input name="rate" type="number" min="0" step="0.01" value="8">
+              <input name="rate" type="number" min="0" step="0.01" placeholder="Tasa anual">
             </label>
             <label>
               <span>Plazo en años</span>
-              <input name="years" type="number" min="1" max="40" step="1" value="10">
+              <input name="years" type="number" min="1" max="40" step="1" placeholder="Años">
             </label>
           </form>
           <div class="results" data-results="savings"></div>
@@ -760,6 +761,6 @@
       </p>
     </footer>
 
-    <script src="script.js?v=polish-2"></script>
+    <script src="script.js?v=polish-3"></script>
   </body>
 </html>

@@ -15,7 +15,7 @@
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="manifest" href="/site.webmanifest">
     <script>document.documentElement.dataset.theme = localStorage.getItem("calculard_theme") || "dark";</script>
-    <link rel="stylesheet" href="styles.css?v=polish-2">
+    <link rel="stylesheet" href="styles.css?v=polish-3">
   </head>
   <body>
     <header class="site-header">
@@ -47,19 +47,19 @@
           <form class="calc-form" data-calculator="vehicle">
             <label>
               <span>Precio del vehículo</span>
-              <input name="price" type="number" min="0" step="5000" value="1500000">
+              <input name="price" type="number" min="0" step="5000" placeholder="Precio del vehículo">
             </label>
             <label>
               <span>Inicial</span>
-              <input name="downPayment" type="number" min="0" step="5000" value="300000">
+              <input name="downPayment" type="number" min="0" step="5000" placeholder="Inicial">
             </label>
             <label>
               <span>Tasa anual (%)</span>
-              <input name="rate" type="number" min="0" step="0.01" value="14">
+              <input name="rate" type="number" min="0" step="0.01" placeholder="Tasa anual">
             </label>
             <label>
               <span>Plazo en años</span>
-              <input name="years" type="number" min="1" max="10" step="1" value="5">
+              <input name="years" type="number" min="1" max="10" step="1" placeholder="Años">
             </label>
           </form>
           <div class="results" data-results="vehicle"></div>
@@ -111,6 +111,6 @@
       <p class="footer-bottom">CalculaRD es una herramienta independiente. No representa bancos, entidades financieras, DGII ni instituciones públicas. Los resultados son referenciales.</p>
       <p class="footer-bottom footer-meta">© <span data-current-year>2026</span> CalculaRD.</p>
     </footer>
-    <script src="script.js?v=polish-2"></script>
+    <script src="script.js?v=polish-3"></script>
   </body>
 </html>

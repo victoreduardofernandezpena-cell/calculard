@@ -1420,9 +1420,21 @@ input[type="file"] {
     gap: 6px;
   }
 
-  .result-row strong {
-    text-align: left;
-  }
+.result-row strong {
+  text-align: left;
+}
+
+.empty-result {
+  border-style: dashed;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.empty-result span {
+  flex-basis: 100%;
+  color: var(--muted);
+  font-weight: 800;
+}
 
   .chart-panel {
     grid-template-columns: 1fr;

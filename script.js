@@ -65,6 +65,19 @@ function getFormValues(form) {
   );
 }
 
+function hasValue(form, name) {
+  const field = form?.elements?.[name];
+  return !!field && String(field.value || "").trim() !== "";
+}
+
+function hasAnyValue(form, names) {
+  return names.some((name) => hasValue(form, name));
+}
+
+function hasRequiredValues(form, names) {
+  return names.every((name) => hasValue(form, name));
+}
+
 function readStorage(key, fallback) {
   try {
     return JSON.parse(localStorage.getItem(key)) || fallback;
@@ -79,6 +92,22 @@ function writeStorage(key, value) {
   } catch (error) {
     // Storage can be unavailable in private mode; the app still works without history.
   }
+}
+
+function sanitizeDealerProfile(profile = {}) {
+  const cleaned = { ...profile };
+  const legacyDefaults = {
+    dealerName: "AutoPremium RD",
+    dealerPhone: "809-000-0000",
+    salesperson: "Asesor comercial",
+    salesRole: "Ejecutivo de ventas"
+  };
+
+  Object.entries(legacyDefaults).forEach(([key, value]) => {
+    if (cleaned[key] === value) cleaned[key] = "";
+  });
+
+  return cleaned;
 }
 
 function monthlyPayment(principal, annualRate, years) {
@@ -145,7 +174,24 @@ function renderResults(name, rows) {
     .join("");
 }
 
+function renderEmptyResult(name, message = "Ingresa tus datos para calcular.") {
+  const target = document.querySelector(`[data-results="${name}"]`);
+  if (!target) return;
+
+  resultSummaries[name] = "";
+  target.innerHTML = `
+    <div class="result-row empty-result">
+      <span>${escapeHtml(message)}</span>
+    </div>
+  `;
+}
+
 function calculateLoan(form) {
+  if (!hasAnyValue(form, ["amount", "rate", "years"])) {
+    renderEmptyResult("loan");
+    return;
+  }
+
   const { amount, rate, years } = getFormValues(form);
   const payment = monthlyPayment(amount, rate, years);
   const months = years * 12;
@@ -160,6 +206,11 @@ function calculateLoan(form) {
 }
 
 function calculateItbis(form) {
+  if (!hasAnyValue(form, ["price"])) {
+    renderEmptyResult("itbis");
+    return;
+  }
+
   const { price, mode } = getFormValues(form);
   const base = mode === "extract" ? price / (1 + ITBIS_RATE) : price;
   const tax = mode === "extract" ? price - base : price * ITBIS_RATE;
@@ -173,6 +224,11 @@ function calculateItbis(form) {
 }
 
 function calculateSalary(form) {
+  if (!hasAnyValue(form, ["salary", "otherIncome", "bonus", "dependents"])) {
+    renderEmptyResult("salary");
+    return;
+  }
+
   const { salary, otherIncome, bonus, dependents } = getFormValues(form);
   const grossSalary = salary || 0;
   const extraIncome = (otherIncome || 0) + (bonus || 0);
@@ -197,6 +253,11 @@ function calculateSalary(form) {
 }
 
 function calculateVehicle(form) {
+  if (!hasAnyValue(form, ["price", "downPayment", "rate", "years"])) {
+    renderEmptyResult("vehicle");
+    return;
+  }
+
   const { price, downPayment, rate, years } = getFormValues(form);
   const financed = Math.max(price - downPayment, 0);
   const payment = monthlyPayment(financed, rate, years);
@@ -212,6 +273,13 @@ function calculateVehicle(form) {
 }
 
 function calculatePersonalCapacity(form) {
+  if (!hasAnyValue(form, ["income", "expenses", "debts", "maxPercent", "rate", "years"])) {
+    renderEmptyResult("personalCapacity");
+    const noteNode = document.querySelector("[data-personal-capacity-note]");
+    if (noteNode) noteNode.textContent = "";
+    return;
+  }
+
   const { income, expenses, debts, maxPercent, rate, years } = getFormValues(form);
   const monthlyIncome = income || 0;
   const monthlyExpenses = expenses || 0;
@@ -242,6 +310,11 @@ function calculatePersonalCapacity(form) {
 }
 
 function calculateLateFee(form) {
+  if (!hasAnyValue(form, ["payment", "daysLate", "monthlyLateRate", "fixedCharge"])) {
+    renderEmptyResult("lateFee");
+    return;
+  }
+
   const { payment, daysLate, monthlyLateRate, fixedCharge } = getFormValues(form);
   const monthlyPaymentValue = payment || 0;
   const dailyRate = (monthlyLateRate || 0) / 100 / 30;
@@ -257,6 +330,11 @@ function calculateLateFee(form) {
 }
 
 function calculateSavings(form) {
+  if (!hasAnyValue(form, ["initial", "monthly", "rate", "years"])) {
+    renderEmptyResult("savings");
+    return;
+  }
+
   const { initial, monthly, rate, years } = getFormValues(form);
   const months = (years || 0) * 12;
   const monthlyRate = (rate || 0) / 100 / 12;
@@ -301,6 +379,35 @@ function getAffordabilityVerdict({ income, freeBeforeVehicle, freeAfterVehicle, 
 }
 
 function calculateAffordability(form) {
+  if (!hasAnyValue(form, [
+    "income",
+    "expenses",
+    "savingsGoal",
+    "vehiclePrice",
+    "downPayment",
+    "rate",
+    "years",
+    "insurance",
+    "fuel",
+    "maintenance"
+  ])) {
+    const verdictNode = document.querySelector("[data-affordability-verdict]");
+    const meter = document.querySelector("[data-affordability-meter]");
+    const note = document.querySelector("[data-affordability-note]");
+
+    if (verdictNode) {
+      verdictNode.className = "affordability-verdict";
+      verdictNode.querySelector("strong").textContent = "Ingresa tus datos";
+    }
+    if (meter) {
+      meter.style.width = "0%";
+      meter.className = "";
+    }
+    if (note) note.textContent = "";
+    renderEmptyResult("affordability", "Completa los datos para evaluar la compra.");
+    return;
+  }
+
   const values = getFormValues(form);
   const income = values.income || 0;
   const expenses = values.expenses || 0;
@@ -363,15 +470,15 @@ function renderAffordabilityVerdict(verdict, vehicleShare) {
 }
 
 function getDealerProfile() {
-  const saved = readStorage(DEALER_KEY, {});
+  const saved = sanitizeDealerProfile(readStorage(DEALER_KEY, {}));
   const form = document.querySelector("[data-dealer-form]");
   const values = form ? getFormValues(form) : {};
 
   return {
-    dealerName: values.dealerName || saved.dealerName || "AutoPremium RD",
-    dealerPhone: values.dealerPhone || saved.dealerPhone || "809-000-0000",
+    dealerName: values.dealerName || saved.dealerName || "Tu negocio",
+    dealerPhone: values.dealerPhone || saved.dealerPhone || "Teléfono o WhatsApp",
     salesperson: values.salesperson || saved.salesperson || "Asesor comercial",
-    salesRole: values.salesRole || saved.salesRole || "Ejecutivo de ventas",
+    salesRole: values.salesRole || saved.salesRole || "Área comercial",
     logo: saved.logo || ""
   };
 }
@@ -392,6 +499,9 @@ function getCommercialQuote() {
   const form = document.querySelector("[data-commercial-form]");
   if (!form) return null;
 
+  if (!hasRequiredValues(form, ["price", "years", "bank"])) return null;
+  if (form.elements.bank.value === "custom" && !hasValue(form, "customRate")) return null;
+
   const values = getFormValues(form);
   const bank = getSelectedBank(values);
   const price = values.price || 0;
@@ -403,9 +513,9 @@ function getCommercialQuote() {
   const interest = Math.max(totalPaid - financed, 0);
 
   return {
-    clientName: values.clientName || "Juan Pérez",
+    clientName: values.clientName || "Cliente",
     clientPhone: values.clientPhone || "",
-    itemName: values.itemName || "Toyota Corolla 2021",
+    itemName: values.itemName || "Producto o vehículo",
     price,
     downPayment,
     financed,
@@ -480,6 +590,11 @@ function renderBankTable(quote) {
   const target = document.querySelector("[data-bank-table]");
   if (!target) return;
 
+  if (!quote) {
+    target.innerHTML = "";
+    return;
+  }
+
   const rates = quote.bank.isCustom ? [quote.bank, ...bankRates] : bankRates;
 
   target.innerHTML = rates.map((bank) => {
@@ -514,6 +629,12 @@ function renderAmortizationTable(quote) {
   const toggle = document.querySelector("[data-toggle-amortization]");
   if (!target) return;
 
+  if (!quote) {
+    target.innerHTML = "";
+    if (toggle) toggle.textContent = "Ver más meses";
+    return;
+  }
+
   const monthsToShow = showFullAmortization ? quote.years * 12 : 6;
   target.innerHTML = buildAmortization(quote.financed, quote.bank.rate, quote.years, monthsToShow)
     .map(
@@ -547,6 +668,13 @@ function renderQuotePreview(quote) {
   logoNodes.forEach((node) => renderLogo(node, dealer.logo));
   if (dealerNode) dealerNode.textContent = dealer.dealerName;
   if (contactNode) contactNode.textContent = `${dealer.dealerPhone} · ${dealer.salesperson}`;
+  if (!quote) {
+    if (titleNode) titleNode.textContent = "Cotización pendiente";
+    if (dateNode) dateNode.textContent = "Ingresa los datos para generar una cotización.";
+    if (advisorNode) advisorNode.textContent = `${dealer.salesperson} · ${dealer.salesRole}`;
+    if (linesNode) linesNode.innerHTML = "";
+    return;
+  }
   if (titleNode) titleNode.textContent = quote.itemName;
   if (dateNode) dateNode.textContent = `Emitida el ${quote.createdAt.toLocaleDateString("es-DO")}`;
   if (advisorNode) advisorNode.textContent = `${dealer.salesperson} · ${dealer.salesRole}`;
@@ -561,6 +689,12 @@ function renderCharts(quote) {
   const donut = document.querySelector("[data-donut-chart]");
   const donutLabel = document.querySelector("[data-donut-label]");
   const bars = document.querySelector("[data-bar-chart]");
+  if (!quote) {
+    if (donut) donut.style.setProperty("--interest", "0%");
+    if (donutLabel) donutLabel.textContent = "0%";
+    if (bars) bars.innerHTML = "";
+    return;
+  }
   const total = quote.financed + quote.interest;
   const interestPercent = total > 0 ? Math.round((quote.interest / total) * 100) : 0;
 
@@ -593,6 +727,7 @@ function renderCharts(quote) {
 
 function renderDealerPreview() {
   const dealer = getDealerProfile();
+  const form = document.querySelector("[data-dealer-form]");
   const logoNode = document.querySelector("[data-dealer-logo]");
   const nameNode = document.querySelector("[data-dealer-name]");
   const phoneNode = document.querySelector("[data-dealer-phone]");
@@ -601,7 +736,9 @@ function renderDealerPreview() {
   if (nameNode) nameNode.textContent = dealer.dealerName;
   if (phoneNode) phoneNode.textContent = dealer.dealerPhone;
 
-  writeStorage(DEALER_KEY, dealer);
+  if (form && hasAnyValue(form, ["dealerName", "dealerPhone", "salesperson", "salesRole"])) {
+    writeStorage(DEALER_KEY, dealer);
+  }
 }
 
 function renderHistory() {
@@ -658,10 +795,19 @@ function saveCurrentQuote() {
 
 function updateCommercialDashboard() {
   const quote = getCommercialQuote();
-  if (!quote) return;
 
   toggleCustomRateField();
   renderDealerPreview();
+
+  if (!quote) {
+    renderEmptyResult("commercial", "Ingresa precio, plazo y entidad para calcular la cotización.");
+    renderBankTable(null);
+    renderAmortizationTable(null);
+    renderQuotePreview(null);
+    renderCharts(null);
+    return;
+  }
+
   renderCommercialResults(quote);
   renderBankTable(quote);
   renderAmortizationTable(quote);
@@ -756,7 +902,7 @@ function initializeCommercialDashboard() {
   const dealerForm = document.querySelector("[data-dealer-form]");
   if (!commercialForm || !dealerForm) return;
 
-  const savedDealer = readStorage(DEALER_KEY, {});
+  const savedDealer = sanitizeDealerProfile(readStorage(DEALER_KEY, {}));
   Object.entries(savedDealer).forEach(([key, value]) => {
     const field = dealerForm.elements[key];
     if (field && field.type !== "file") field.value = value;

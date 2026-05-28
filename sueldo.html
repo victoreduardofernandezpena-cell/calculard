@@ -15,7 +15,7 @@
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="manifest" href="/site.webmanifest">
     <script>document.documentElement.dataset.theme = localStorage.getItem("calculard_theme") || "dark";</script>
-    <link rel="stylesheet" href="styles.css?v=polish-2">
+    <link rel="stylesheet" href="styles.css?v=polish-3">
   </head>
   <body>
     <header class="site-header">
@@ -47,19 +47,19 @@
           <form class="calc-form" data-calculator="salary">
             <label>
               <span>Salario mensual bruto</span>
-              <input name="salary" type="number" min="0" step="1000" value="75000">
+              <input name="salary" type="number" min="0" step="1000" placeholder="Salario mensual bruto">
             </label>
             <label>
               <span>Otros ingresos mensuales</span>
-              <input name="otherIncome" type="number" min="0" step="1000" value="0">
+              <input name="otherIncome" type="number" min="0" step="1000" placeholder="Otros ingresos mensuales">
             </label>
             <label>
               <span>Bonificación promedio mensual</span>
-              <input name="bonus" type="number" min="0" step="1000" value="0">
+              <input name="bonus" type="number" min="0" step="1000" placeholder="Bonificación promedio mensual">
             </label>
             <label>
               <span>Dependientes</span>
-              <input name="dependents" type="number" min="0" step="1" value="0">
+              <input name="dependents" type="number" min="0" step="1" placeholder="Dependientes">
             </label>
           </form>
           <div class="results" data-results="salary"></div>
@@ -113,6 +113,6 @@
       <p class="footer-bottom">CalculaRD es una herramienta independiente. No representa bancos, entidades financieras, DGII ni instituciones públicas. Los resultados son referenciales.</p>
       <p class="footer-bottom footer-meta">© <span data-current-year>2026</span> CalculaRD. La simulación es referencial y puede variar según empleador, beneficios, retenciones y normativa fiscal aplicable.</p>
     </footer>
-    <script src="script.js?v=polish-2"></script>
+    <script src="script.js?v=polish-3"></script>
   </body>
 </html>
