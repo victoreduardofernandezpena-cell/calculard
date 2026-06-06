@@ -6,13 +6,13 @@
     <title>CalculaRD | Simulaciones financieras para República Dominicana</title>
     <meta
       name="description"
-      content="Simula financiamientos, cuotas mensuales, ITBIS, salario neto y capacidad de compra para República Dominicana."
+      content="Simula financiamientos, cuotas mensuales, salario neto y capacidad de compra para República Dominicana."
     >
     <meta name="theme-color" content="#0d1117">
     <meta property="og:title" content="CalculaRD | Simulaciones financieras para RD">
     <meta
       property="og:description"
-      content="Simula financiamientos, compara entidades, genera cotizaciones y estima ITBIS, salario neto y capacidad de compra en RD."
+      content="Simula financiamientos, compara entidades, genera cotizaciones y estima salario neto y capacidad de compra en RD."
     >
     <meta property="og:type" content="website">
     <meta property="og:image" content="/og-image.svg">
@@ -23,7 +23,7 @@
     <script>
       document.documentElement.dataset.theme = localStorage.getItem("calculard_theme") || "dark";
     </script>
-    <link rel="stylesheet" href="styles.css?v=polish-3">
+    <link rel="stylesheet" href="styles.css?v=motion-7">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -410,7 +410,7 @@
       <section class="personal-calculators" id="calculadoras" aria-label="Calculadoras personales">
         <div class="section-heading compact-heading">
           <p class="eyebrow">Calculadoras personales</p>
-          <h2>Módulos para estimar cuotas, impuestos, sueldo, capacidad, mora y ahorro.</h2>
+          <h2>Módulos para estimar cuotas, sueldo, capacidad, mora y ahorro.</h2>
         </div>
         <div class="calculator-grid">
         <article class="calculator-card" id="prestamos">
@@ -437,32 +437,6 @@
           <div class="share-buttons">
             <button class="button secondary" type="button" data-copy-result="loan">Copiar resultado</button>
             <button class="button whatsapp" type="button" data-whatsapp-result="loan">Compartir por WhatsApp</button>
-          </div>
-        </article>
-
-        <article class="calculator-card" id="itbis">
-          <div class="card-heading">
-            <span class="section-icon" aria-hidden="true">I</span>
-            <p>Calculadora ITBIS</p>
-            <h2>Agregar o extraer 18%</h2>
-          </div>
-          <form class="calc-form" data-calculator="itbis">
-            <label>
-              <span>Precio</span>
-              <input name="price" type="number" min="0" step="100" placeholder="Precio">
-            </label>
-            <label>
-              <span>Modo</span>
-              <select name="mode">
-                <option value="add">Precio sin ITBIS</option>
-                <option value="extract">Precio con ITBIS incluido</option>
-              </select>
-            </label>
-          </form>
-          <div class="results" data-results="itbis"></div>
-          <div class="share-buttons">
-            <button class="button secondary" type="button" data-copy-result="itbis">Copiar resultado</button>
-            <button class="button whatsapp" type="button" data-whatsapp-result="itbis">Compartir por WhatsApp</button>
           </div>
         </article>
 
@@ -672,7 +646,6 @@
         <nav aria-label="Herramientas">
           <strong>Herramientas</strong>
           <a href="#prestamos">Financiamiento</a>
-          <a href="#itbis">ITBIS</a>
           <a href="#sueldo">Sueldo</a>
           <a href="#vehiculos">Vehículos</a>
           <a href="#capacidad">Capacidad</a>
@@ -691,8 +664,7 @@
         CalculaRD es una herramienta independiente. No representa bancos, entidades financieras, DGII ni instituciones públicas. Los resultados son referenciales.
       </p>
       <p class="footer-bottom footer-meta">
-        © <span data-current-year>2026</span> CalculaRD. Simulaciones referenciales. Fuentes: <a href="https://dgii.gov.do/cicloContribuyente/obligacionesTributarias/principalesImpuestos/Paginas/Itbis.aspx" target="_blank">DGII ITBIS</a>
-        y <a href="https://dgii.gov.do/cicloContribuyente/obligacionesTributarias/principalesImpuestos/Paginas/impuestoSobreRenta.aspx" target="_blank">DGII ISR 2026</a>.
+        © <span data-current-year>2026</span> CalculaRD. Simulaciones referenciales. Fuente: <a href="https://dgii.gov.do/cicloContribuyente/obligacionesTributarias/principalesImpuestos/Paginas/impuestoSobreRenta.aspx" target="_blank">DGII ISR 2026</a>.
       </p>
     </footer>
 

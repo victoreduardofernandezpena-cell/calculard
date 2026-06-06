@@ -8,7 +8,6 @@ const NUMBER_FORMATTER = new Intl.NumberFormat("es-DO", {
   maximumFractionDigits: 2
 });
 
-const ITBIS_RATE = 0.18;
 const AFP_RATE = 0.0287;
 const SFS_RATE = 0.0304;
 
@@ -202,24 +201,6 @@ function calculateLoan(form) {
     { label: "Cuota mensual estimada", value: money(payment), variant: "highlight" },
     { label: "Total de intereses", value: money(interest), variant: "warning" },
     { label: "Total pagado", value: money(totalPaid) }
-  ]);
-}
-
-function calculateItbis(form) {
-  if (!hasAnyValue(form, ["price"])) {
-    renderEmptyResult("itbis");
-    return;
-  }
-
-  const { price, mode } = getFormValues(form);
-  const base = mode === "extract" ? price / (1 + ITBIS_RATE) : price;
-  const tax = mode === "extract" ? price - base : price * ITBIS_RATE;
-  const total = mode === "extract" ? price : base + tax;
-
-  renderResults("itbis", [
-    { label: "Base imponible", value: money(base) },
-    { label: `ITBIS (${percent(ITBIS_RATE * 100)})`, value: money(tax), variant: "warning" },
-    { label: "Total", value: money(total), variant: "highlight" }
   ]);
 }
 
@@ -1020,7 +1001,6 @@ function initializeAffordabilityCalculator() {
 
 const calculators = {
   loan: calculateLoan,
-  itbis: calculateItbis,
   salary: calculateSalary,
   vehicle: calculateVehicle,
   personalCapacity: calculatePersonalCapacity,
@@ -1083,10 +1063,46 @@ function initializeTheme() {
   });
 }
 
+function initializeMotion() {
+  const animatedSelectors = [
+    ".section-heading",
+    ".settings-panel",
+    ".quote-builder",
+    ".data-panel",
+    ".calculator-card",
+    ".faq-grid details"
+  ];
+  const items = [...document.querySelectorAll(animatedSelectors.join(","))];
+
+  items.forEach((item, index) => {
+    item.classList.add("reveal-item");
+    item.style.setProperty("--reveal-delay", `${Math.min(index % 6, 5) * 70}ms`);
+  });
+
+  if (!("IntersectionObserver" in window)) {
+    items.forEach((item) => item.classList.add("is-visible"));
+    return;
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-visible");
+        observer.unobserve(entry.target);
+      });
+    },
+    { rootMargin: "0px 0px -8% 0px", threshold: 0.12 }
+  );
+
+  items.forEach((item) => observer.observe(item));
+}
+
 initializeCommercialDashboard();
 initializeAffordabilityCalculator();
 initializeShareActions();
 initializeTheme();
+initializeMotion();
 
 document.querySelectorAll("[data-current-year]").forEach((node) => {
   node.textContent = String(new Date().getFullYear());
