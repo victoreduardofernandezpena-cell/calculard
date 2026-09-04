@@ -15,6 +15,8 @@ export function initializeTheme() {
 
 function applyTheme(theme) {
   document.documentElement.dataset.theme = theme;
+  const themeColor = document.querySelector('meta[name="theme-color"]');
+  if (themeColor) themeColor.content = theme === "light" ? "#F8FAFC" : "#0B1120";
   document.querySelector("[data-theme-toggle]")?.setAttribute(
     "aria-label",
     theme === "light" ? "Cambiar a modo oscuro" : "Cambiar a modo claro"

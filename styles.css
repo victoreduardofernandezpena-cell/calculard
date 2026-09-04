@@ -4585,3 +4585,99 @@ th,
 .button:focus-visible {
   outline-color: color-mix(in srgb, var(--primary) 76%, white);
 }
+
+/* Shared finish for secondary pages */
+.brand {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0;
+  font-size: 1.08rem;
+  font-weight: 700;
+}
+
+.brand > span {
+  color: var(--text) !important;
+}
+
+.brand > strong {
+  color: var(--primary) !important;
+  font-weight: 700;
+}
+
+.brand > span::before,
+.brand > span::after {
+  content: none !important;
+}
+
+.nav-links a {
+  border-color: transparent;
+  border-radius: 5px;
+  background: transparent;
+  box-shadow: none;
+}
+
+.nav-links a:hover,
+.nav-links a:focus {
+  border-color: transparent;
+}
+
+.page-intro {
+  padding: clamp(3.25rem, 7vw, 5rem) 0 2rem;
+}
+
+.page-intro h1 {
+  max-width: 760px;
+  font-size: clamp(2.35rem, 5vw, 3.8rem);
+  font-weight: 700;
+  line-height: 1.04;
+}
+
+.page-intro p:not(.eyebrow) {
+  margin-top: 0.9rem;
+  font-size: 1.02rem;
+}
+
+.eyebrow,
+.card-heading p {
+  letter-spacing: 0;
+  text-transform: none;
+  font-weight: 600;
+}
+
+.calculator-card,
+.faq-grid details,
+:root[data-theme="light"] .calculator-card,
+:root[data-theme="light"] .faq-grid details {
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+.calculator-card {
+  box-shadow: 0 12px 30px color-mix(in srgb, var(--bg) 52%, transparent);
+}
+
+.calculator-card:hover,
+.faq-grid details:hover {
+  transform: none;
+  background: var(--panel);
+  box-shadow: none;
+}
+
+.calculator-card:hover {
+  box-shadow: 0 12px 30px color-mix(in srgb, var(--bg) 52%, transparent);
+}
+
+.section-heading,
+.section-heading.is-visible {
+  padding-left: 0;
+  border-left: 0;
+}
+
+.footer-grid,
+:root[data-theme="light"] .footer-grid {
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}

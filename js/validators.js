@@ -22,7 +22,7 @@ export function validateForm(form, rules) {
 
     const number = Number(value);
     if (rule.number && Number.isNaN(number)) {
-      errors[name] = "Ingresa un numero valido.";
+      errors[name] = "Ingresa un número válido.";
       return;
     }
 

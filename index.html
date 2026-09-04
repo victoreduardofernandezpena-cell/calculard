@@ -3,18 +3,18 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>CalculaRD | Calculadoras financieras para Republica Dominicana</title>
-    <meta name="description" content="Calcula prestamos, sueldo neto, ITBIS, retenciones, ahorro y comparaciones financieras para Republica Dominicana.">
+    <title>CalculaRD | Calculadoras financieras para República Dominicana</title>
+    <meta name="description" content="Calcula préstamos, sueldo neto, ITBIS, retenciones, ahorro y comparaciones financieras para República Dominicana.">
     <meta name="theme-color" content="#0B1120">
-    <meta property="og:title" content="CalculaRD | Calcula. Entiende. Decide.">
-    <meta property="og:description" content="Plataforma web de herramientas financieras en HTML, CSS y JavaScript para Republica Dominicana.">
+    <meta property="og:title" content="CalculaRD | Calculadoras para tus números del día a día">
+    <meta property="og:description" content="Préstamos, sueldo, ITBIS y otras herramientas pensadas para República Dominicana.">
     <meta property="og:type" content="website">
     <meta property="og:image" content="/og-image.svg">
     <meta name="twitter:card" content="summary_large_image">
     <link rel="canonical" href="https://calculard.com/">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="manifest" href="/manifest.json">
-    <link rel="stylesheet" href="/css/style.css?v=4">
+    <link rel="stylesheet" href="/css/style.css?v=5">
     <script>
       const savedTheme = localStorage.getItem("calculard_theme");
       const systemTheme = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
@@ -23,349 +23,269 @@
   </head>
   <body>
     <header class="site-header">
-      <nav class="nav" aria-label="Navegacion principal">
+      <nav class="nav" aria-label="Navegación principal">
         <a class="brand" href="#inicio" aria-label="Ir al inicio de CalculaRD">
-          <span class="brand-mark" aria-hidden="true">RD</span>
-          <span>CalculaRD</span>
+          <span>Calcula</span><strong>RD</strong>
         </a>
         <div class="nav-links">
           <a href="#herramientas">Herramientas</a>
-          <a href="#prestamos">Prestamos</a>
-          <a href="#favoritos">Favoritos</a>
-          <a href="#historial">Historial</a>
+          <a href="#prestamos" data-open-tool="loan">Préstamos</a>
+          <button class="nav-button" type="button" data-history-open>Historial</button>
           <button class="icon-button theme-toggle" type="button" data-theme-toggle aria-label="Cambiar modo claro u oscuro">
-            <span aria-hidden="true">◐</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="4"></circle>
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41"></path>
+            </svg>
           </button>
         </div>
       </nav>
     </header>
 
     <main id="inicio">
-      <section class="hero">
+      <section class="hero" aria-labelledby="hero-title">
         <div class="hero-copy">
-          <p class="eyebrow">Herramientas financieras para RD</p>
-          <h1>Calcula. Entiende. Decide.</h1>
-          <p>
-            CalculaRD organiza prestamos, impuestos, sueldo, ahorro y comparaciones en una experiencia rapida,
-            privada y pensada para decisiones dominicanas del dia a dia.
-          </p>
-          <div class="hero-actions">
-            <a class="button primary" href="#herramientas">Buscar calculadora</a>
-            <a class="button secondary" href="#prestamos">Abrir prestamo avanzado</a>
-          </div>
-        </div>
-        <aside class="hero-panel" aria-label="Resumen de capacidades de CalculaRD">
-          <div class="receipt-line">
-            <span>Moneda</span>
-            <strong>RD$125,000.00</strong>
-          </div>
-          <div class="receipt-line">
-            <span>Interes</span>
-            <strong>Canvas + amortizacion</strong>
-          </div>
-          <div class="receipt-line">
-            <span>Privacidad</span>
-            <strong>LocalStorage</strong>
-          </div>
-          <div class="hero-strip" aria-hidden="true">
-            <span></span><span></span><span></span><span></span><span></span>
-          </div>
-        </aside>
-      </section>
-
-      <section class="tool-finder" id="herramientas" aria-labelledby="finder-title">
-        <div class="section-heading">
-          <p class="eyebrow">Dashboard</p>
-          <h2 id="finder-title">Encuentra la calculadora que necesitas.</h2>
-        </div>
-        <label class="search-box">
-          <span>Buscar calculadora</span>
-          <input type="search" data-tool-search placeholder="¿Qué quieres calcular?" autocomplete="off">
-        </label>
-        <div class="empty-state" data-search-empty hidden>
-          No encontramos calculadoras con ese termino.
-        </div>
-      </section>
-
-      <section class="favorites-section" id="favoritos" aria-labelledby="favorites-title">
-        <div class="section-heading compact">
-          <p class="eyebrow">Favoritos</p>
-          <h2 id="favorites-title">Tus herramientas frecuentes.</h2>
-        </div>
-        <div class="tool-grid" data-favorites-grid></div>
-        <div class="empty-state" data-favorites-empty>Aun no tienes calculadoras favoritas.</div>
-      </section>
-
-      <section class="category-section" aria-labelledby="finanzas-title">
-        <div class="section-heading compact">
-          <p class="eyebrow">Finanzas</p>
-          <h2 id="finanzas-title">Prestamos, amortizacion y ahorro.</h2>
-        </div>
-        <div class="tool-grid">
-          <article class="tool-card" data-tool-card data-tool-key="prestamos" data-title="Prestamo avanzado" data-category="Finanzas" data-keywords="prestamo cuota amortizacion intereses financiamiento">
-            <button class="favorite-button" type="button" data-favorite-toggle="prestamos" aria-label="Marcar Prestamo avanzado como favorito">☆</button>
-            <span class="tool-icon" aria-hidden="true">P</span>
-            <h3>Prestamo avanzado</h3>
-            <p>Calcula cuota mensual, total pagado, intereses y tabla de amortizacion.</p>
-            <a class="tool-link" href="#prestamos">Calcular →</a>
-          </article>
-          <article class="tool-card" data-tool-card data-tool-key="comparador" data-title="Comparador de prestamos" data-category="Finanzas" data-keywords="comparar prestamos bancos tasas ahorro opcion economica">
-            <button class="favorite-button" type="button" data-favorite-toggle="comparador" aria-label="Marcar Comparador de prestamos como favorito">☆</button>
-            <span class="tool-icon" aria-hidden="true">C</span>
-            <h3>Comparador de prestamos</h3>
-            <p>Compara dos escenarios y entiende cuanto ahorra una opcion sobre otra.</p>
-            <a class="tool-link" href="#comparador">Comparar →</a>
-          </article>
-          <article class="tool-card" data-tool-card data-tool-key="ahorro" data-title="Meta de ahorro" data-category="Finanzas" data-keywords="ahorro meta interes compuesto aporte mensual">
-            <button class="favorite-button" type="button" data-favorite-toggle="ahorro" aria-label="Marcar Meta de ahorro como favorito">☆</button>
-            <span class="tool-icon" aria-hidden="true">A</span>
-            <h3>Meta de ahorro</h3>
-            <p>Proyecta aportes mensuales e interes compuesto en el tiempo.</p>
-            <a class="tool-link" href="#calc-ahorro">Calcular →</a>
-          </article>
-        </div>
-      </section>
-
-      <section class="category-section" aria-labelledby="trabajo-title">
-        <div class="section-heading compact">
-          <p class="eyebrow">Trabajo</p>
-          <h2 id="trabajo-title">Sueldo, horas y vacaciones.</h2>
-        </div>
-        <div class="tool-grid">
-          <article class="tool-card" data-tool-card data-tool-key="sueldo" data-title="Sueldo neto" data-category="Trabajo" data-keywords="salario sueldo afp sfs isr neto dominicana">
-            <button class="favorite-button" type="button" data-favorite-toggle="sueldo" aria-label="Marcar Sueldo neto como favorito">☆</button>
-            <span class="tool-icon" aria-hidden="true">S</span>
-            <h3>Sueldo neto</h3>
-            <p>Estima AFP, SFS, ISR mensual y salario neto.</p>
-            <a class="tool-link" href="#calc-sueldo">Calcular →</a>
-          </article>
-          <article class="tool-card" data-tool-card data-tool-key="horas" data-title="Pago por hora" data-category="Trabajo" data-keywords="pago hora salario hora extra jornada">
-            <button class="favorite-button" type="button" data-favorite-toggle="horas" aria-label="Marcar Pago por hora como favorito">☆</button>
-            <span class="tool-icon" aria-hidden="true">H</span>
-            <h3>Pago por hora</h3>
-            <p>Convierte sueldo mensual en pago por hora y calcula horas extras.</p>
-            <a class="tool-link" href="#calc-horas">Calcular →</a>
-          </article>
-          <article class="tool-card" data-tool-card data-tool-key="vacaciones" data-title="Vacaciones" data-category="Trabajo" data-keywords="vacaciones pago laboral salario diario">
-            <button class="favorite-button" type="button" data-favorite-toggle="vacaciones" aria-label="Marcar Vacaciones como favorito">☆</button>
-            <span class="tool-icon" aria-hidden="true">V</span>
-            <h3>Vacaciones</h3>
-            <p>Estima el pago de vacaciones usando salario diario referencial.</p>
-            <a class="tool-link" href="#calc-vacaciones">Calcular →</a>
-          </article>
-        </div>
-      </section>
-
-      <section class="category-section" aria-labelledby="impuestos-title">
-        <div class="section-heading compact">
-          <p class="eyebrow">Impuestos</p>
-          <h2 id="impuestos-title">ITBIS y retenciones frecuentes.</h2>
-        </div>
-        <div class="tool-grid">
-          <article class="tool-card" data-tool-card data-tool-key="itbis" data-title="ITBIS" data-category="Impuestos" data-keywords="itbis impuesto 18 subtotal total">
-            <button class="favorite-button" type="button" data-favorite-toggle="itbis" aria-label="Marcar ITBIS como favorito">☆</button>
-            <span class="tool-icon" aria-hidden="true">I</span>
-            <h3>ITBIS</h3>
-            <p>Agrega o extrae el 18% de ITBIS de un monto.</p>
-            <a class="tool-link" href="#calc-itbis">Calcular →</a>
-          </article>
-          <article class="tool-card" data-tool-card data-tool-key="retenciones" data-title="Retenciones" data-category="Impuestos" data-keywords="retencion honorarios servicios alquiler factura">
-            <button class="favorite-button" type="button" data-favorite-toggle="retenciones" aria-label="Marcar Retenciones como favorito">☆</button>
-            <span class="tool-icon" aria-hidden="true">R</span>
-            <h3>Retenciones</h3>
-            <p>Calcula retenciones simples para facturas y servicios.</p>
-            <a class="tool-link" href="#calc-retenciones">Calcular →</a>
-          </article>
-        </div>
-      </section>
-
-      <section class="calculator-shell print-area" id="prestamos" aria-labelledby="loan-title">
-        <div class="calculator-intro">
-          <p class="eyebrow">Finanzas</p>
-          <h2 id="loan-title">Calculadora de prestamos avanzada</h2>
-          <p>Introduce monto, inicial, tasa y plazo. La cuota se estima con amortizacion francesa.</p>
-        </div>
-        <form class="calc-form" data-form="loan" novalidate>
-          <label>
-            <span>Monto del prestamo</span>
-            <input name="amount" type="number" min="1" max="100000000" step="1000" placeholder="500000" required>
-            <small data-error-for="amount"></small>
+          <p class="hero-context">RD$ · ITBIS · AFP · SFS · ISR</p>
+          <h1 id="hero-title">Calcula<span>RD</span></h1>
+          <p class="hero-lead">Calculadoras para tus números del día a día.</p>
+          <p class="hero-description">Préstamos, sueldo, ITBIS y otras herramientas pensadas para República Dominicana.</p>
+          <label class="search-box">
+            <span>Buscar una calculadora</span>
+            <span class="search-control">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+              <input type="search" data-tool-search placeholder="Ej. préstamo, sueldo o ITBIS" autocomplete="off">
+            </span>
           </label>
-          <label>
-            <span>Inicial</span>
-            <input name="downPayment" type="number" min="0" max="100000000" step="1000" placeholder="0">
-            <small data-error-for="downPayment"></small>
-          </label>
-          <label>
-            <span>Tasa de interes anual (%)</span>
-            <input name="rate" type="number" min="0" max="80" step="0.01" placeholder="15" required>
-            <small data-error-for="rate"></small>
-          </label>
-          <label>
-            <span>Plazo</span>
-            <input name="term" type="number" min="1" max="480" step="1" placeholder="60" required>
-            <small data-error-for="term"></small>
-          </label>
-          <label>
-            <span>Unidad del plazo</span>
-            <select name="termUnit">
-              <option value="months">Meses</option>
-              <option value="years">Años</option>
-            </select>
-          </label>
-          <button class="button primary" type="submit">Calcular prestamo</button>
-        </form>
-        <div class="result-layout">
+        </div>
+      </section>
+
+      <section class="favorites-section" id="favoritos" aria-labelledby="favorites-title" data-favorites-section hidden>
+        <div class="section-heading section-heading-inline">
           <div>
-            <div class="results" data-results="loan"></div>
-            <div class="explanation" data-explanation="loan"></div>
-          </div>
-          <div class="chart-card">
-            <canvas width="420" height="260" data-loan-chart aria-label="Grafica de capital, intereses y balance"></canvas>
+            <h2 id="favorites-title">Tus favoritos</h2>
+            <p>Accesos rápidos guardados en este navegador.</p>
           </div>
         </div>
-        <div class="action-row">
-          <button class="button secondary" type="button" data-toggle-amortization>Expandir tabla</button>
-          <button class="button secondary" type="button" data-download-csv>Descargar CSV</button>
-          <button class="button secondary" type="button" data-print-result>Imprimir</button>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Cuota</th>
-                <th>Pago</th>
-                <th>Capital</th>
-                <th>Interes</th>
-                <th>Balance restante</th>
-              </tr>
-            </thead>
-            <tbody data-amortization-table></tbody>
-          </table>
-        </div>
+        <div class="favorites-list" data-favorites-grid></div>
       </section>
 
-      <section class="calculator-shell" id="comparador" aria-labelledby="compare-title">
-        <div class="calculator-intro">
-          <p class="eyebrow">Finanzas</p>
-          <h2 id="compare-title">Comparador de prestamos</h2>
-          <p>Compara dos alternativas usando los mismos criterios de amortizacion.</p>
+      <section class="tools-section" id="herramientas" aria-labelledby="tools-title">
+        <div class="section-heading">
+          <h2 id="tools-title">Elige una herramienta</h2>
+          <p>Empieza por la que necesitas. Puedes cambiar de calculadora sin perder tu historial.</p>
         </div>
-        <form class="compare-grid" data-form="compare" novalidate>
-          <fieldset>
-            <legend>Prestamo A</legend>
-            <label><span>Monto</span><input name="aAmount" type="number" min="1" step="1000" required><small data-error-for="aAmount"></small></label>
-            <label><span>Inicial</span><input name="aDownPayment" type="number" min="0" step="1000"><small data-error-for="aDownPayment"></small></label>
-            <label><span>Interes anual (%)</span><input name="aRate" type="number" min="0" max="80" step="0.01" required><small data-error-for="aRate"></small></label>
-            <label><span>Plazo en meses</span><input name="aMonths" type="number" min="1" max="480" step="1" required><small data-error-for="aMonths"></small></label>
-          </fieldset>
-          <fieldset>
-            <legend>Prestamo B</legend>
-            <label><span>Monto</span><input name="bAmount" type="number" min="1" step="1000" required><small data-error-for="bAmount"></small></label>
-            <label><span>Inicial</span><input name="bDownPayment" type="number" min="0" step="1000"><small data-error-for="bDownPayment"></small></label>
-            <label><span>Interes anual (%)</span><input name="bRate" type="number" min="0" max="80" step="0.01" required><small data-error-for="bRate"></small></label>
-            <label><span>Plazo en meses</span><input name="bMonths" type="number" min="1" max="480" step="1" required><small data-error-for="bMonths"></small></label>
-          </fieldset>
-          <button class="button primary" type="submit">Comparar prestamos</button>
-        </form>
-        <div class="results" data-results="compare"></div>
-        <div class="explanation" data-explanation="compare"></div>
+
+        <div class="tool-dashboard">
+          <article class="tool-card tool-card-featured" data-tool-card data-tool-key="prestamos" data-title="Préstamo avanzado" data-category="Finanzas" data-keywords="préstamo cuota amortización intereses financiamiento">
+            <button class="favorite-button" type="button" data-favorite-toggle="prestamos" aria-label="Marcar Préstamo avanzado como favorito" aria-pressed="false">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.78 5.63 6.22.9-4.5 4.39 1.06 6.2L12 17.2l-5.56 2.92 1.06-6.2L3 9.53l6.22-.9L12 3Z"></path></svg>
+            </button>
+            <span class="tool-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M7 9h10M7 15h3M16 13v4M14 15h4"></path></svg>
+            </span>
+            <div>
+              <p class="tool-kicker">La más usada</p>
+              <h3>Préstamo avanzado</h3>
+              <p>Calcula tu cuota, revisa intereses y consulta cada pago de la amortización.</p>
+            </div>
+            <button class="tool-link" type="button" data-open-tool="loan">
+              Calcular préstamo
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+            </button>
+          </article>
+
+          <div class="priority-tools" data-tool-group>
+            <article class="tool-card tool-card-medium" data-tool-card data-tool-key="sueldo" data-title="Sueldo neto" data-category="Trabajo" data-keywords="salario sueldo AFP SFS ISR neto dominicana">
+              <button class="favorite-button" type="button" data-favorite-toggle="sueldo" aria-label="Marcar Sueldo neto como favorito" aria-pressed="false">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.78 5.63 6.22.9-4.5 4.39 1.06 6.2L12 17.2l-5.56 2.92 1.06-6.2L3 9.53l6.22-.9L12 3Z"></path></svg>
+              </button>
+              <span class="tool-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M4 7h14a2 2 0 0 1 2 2v9H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h13"></path><path d="M15 11h5v4h-5a2 2 0 0 1 0-4Z"></path></svg>
+              </span>
+              <div><h3>Sueldo neto</h3><p>Estima AFP, SFS, ISR y lo que recibirías al mes.</p></div>
+              <button class="tool-link" type="button" data-open-tool="salary">Calcular sueldo <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button>
+            </article>
+
+            <article class="tool-card tool-card-medium" data-tool-card data-tool-key="itbis" data-title="ITBIS" data-category="Impuestos" data-keywords="ITBIS impuesto 18 subtotal total">
+              <button class="favorite-button" type="button" data-favorite-toggle="itbis" aria-label="Marcar ITBIS como favorito" aria-pressed="false">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.78 5.63 6.22.9-4.5 4.39 1.06 6.2L12 17.2l-5.56 2.92 1.06-6.2L3 9.53l6.22-.9L12 3Z"></path></svg>
+              </button>
+              <span class="tool-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Z"></path><path d="m9 9 6 6M15 9h.01M9 15h.01"></path></svg>
+              </span>
+              <div><h3>ITBIS</h3><p>Agrega o extrae el 18% de un monto.</p></div>
+              <button class="tool-link" type="button" data-open-tool="itbis">Calcular ITBIS <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg></button>
+            </article>
+          </div>
+
+          <div class="more-tools" data-tool-group>
+            <div class="more-tools-heading">
+              <h3>Más herramientas</h3>
+              <p>Para comparar, ahorrar y organizar tus números.</p>
+            </div>
+            <div class="compact-tool-list">
+              <article class="tool-card tool-card-compact" data-tool-card data-tool-key="comparador" data-title="Comparador de préstamos" data-category="Finanzas" data-keywords="comparar préstamos bancos tasas ahorro opción económica">
+                <button class="favorite-button" type="button" data-favorite-toggle="comparador" aria-label="Marcar Comparador de préstamos como favorito" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.78 5.63 6.22.9-4.5 4.39 1.06 6.2L12 17.2l-5.56 2.92 1.06-6.2L3 9.53l6.22-.9L12 3Z"></path></svg></button>
+                <span class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 7h13M17 4l3 3-3 3M17 17H4M7 14l-3 3 3 3"></path></svg></span>
+                <button class="compact-tool-action" type="button" data-open-tool="compare"><strong>Comparador</strong><span>Dos préstamos, lado a lado</span></button>
+              </article>
+
+              <article class="tool-card tool-card-compact" data-tool-card data-tool-key="ahorro" data-title="Meta de ahorro" data-category="Finanzas" data-keywords="ahorro meta interés compuesto aporte mensual">
+                <button class="favorite-button" type="button" data-favorite-toggle="ahorro" aria-label="Marcar Meta de ahorro como favorito" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.78 5.63 6.22.9-4.5 4.39 1.06 6.2L12 17.2l-5.56 2.92 1.06-6.2L3 9.53l6.22-.9L12 3Z"></path></svg></button>
+                <span class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"></circle><path d="M12 8v8M9.5 10h4a1.5 1.5 0 0 1 0 3h-3a1.5 1.5 0 0 0 0 3h4"></path></svg></span>
+                <button class="compact-tool-action" type="button" data-open-tool="savings"><strong>Ahorro</strong><span>Proyecta aportes e intereses</span></button>
+              </article>
+
+              <article class="tool-card tool-card-compact" data-tool-card data-tool-key="horas" data-title="Pago por hora" data-category="Trabajo" data-keywords="pago hora salario hora extra jornada">
+                <button class="favorite-button" type="button" data-favorite-toggle="horas" aria-label="Marcar Pago por hora como favorito" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.78 5.63 6.22.9-4.5 4.39 1.06 6.2L12 17.2l-5.56 2.92 1.06-6.2L3 9.53l6.22-.9L12 3Z"></path></svg></button>
+                <span class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg></span>
+                <button class="compact-tool-action" type="button" data-open-tool="hourly"><strong>Pago por hora</strong><span>Incluye horas extras</span></button>
+              </article>
+
+              <article class="tool-card tool-card-compact" data-tool-card data-tool-key="vacaciones" data-title="Vacaciones" data-category="Trabajo" data-keywords="vacaciones pago laboral salario diario">
+                <button class="favorite-button" type="button" data-favorite-toggle="vacaciones" aria-label="Marcar Vacaciones como favorito" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.78 5.63 6.22.9-4.5 4.39 1.06 6.2L12 17.2l-5.56 2.92 1.06-6.2L3 9.53l6.22-.9L12 3Z"></path></svg></button>
+                <span class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 17h18M5 17l3-8 4 8 3-11 4 11"></path><path d="M4 21h16"></path></svg></span>
+                <button class="compact-tool-action" type="button" data-open-tool="vacation"><strong>Vacaciones</strong><span>Estima tu pago</span></button>
+              </article>
+
+              <article class="tool-card tool-card-compact" data-tool-card data-tool-key="retenciones" data-title="Retenciones" data-category="Impuestos" data-keywords="retención honorarios servicios alquiler factura">
+                <button class="favorite-button" type="button" data-favorite-toggle="retenciones" aria-label="Marcar Retenciones como favorito" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.78 5.63 6.22.9-4.5 4.39 1.06 6.2L12 17.2l-5.56 2.92 1.06-6.2L3 9.53l6.22-.9L12 3Z"></path></svg></button>
+                <span class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5z"></path><path d="M8 8h8M8 16h8M9 12h.01M15 12h.01M10 15l4-6"></path></svg></span>
+                <button class="compact-tool-action" type="button" data-open-tool="withholding"><strong>Retenciones</strong><span>Calcula el neto a recibir</span></button>
+              </article>
+            </div>
+          </div>
+        </div>
+
+        <div class="empty-state search-empty" data-search-empty hidden>No encontramos una calculadora con ese nombre.</div>
       </section>
 
-      <section class="category-section calculators-workbench" aria-label="Calculadoras adicionales">
-        <article class="mini-calculator" id="calc-sueldo">
-          <h3>Sueldo neto RD</h3>
-          <form class="calc-form" data-form="salary" novalidate>
-            <label><span>Salario bruto mensual</span><input name="salary" type="number" min="1" step="1000" required><small data-error-for="salary"></small></label>
-            <label><span>Otros ingresos</span><input name="otherIncome" type="number" min="0" step="1000"><small data-error-for="otherIncome"></small></label>
-            <button class="button primary" type="submit">Calcular sueldo</button>
+      <section class="calculator-workspace" id="calculadora" aria-labelledby="workspace-title">
+        <div class="workspace-header">
+          <div>
+            <p class="workspace-label">Calculadora activa</p>
+            <h2 id="workspace-title">Haz tu cálculo</h2>
+          </div>
+          <div class="tool-tabs" role="tablist" aria-label="Cambiar de calculadora">
+            <button type="button" role="tab" data-tool-switch data-open-tool="loan" aria-selected="true">Préstamo</button>
+            <button type="button" role="tab" data-tool-switch data-open-tool="salary" aria-selected="false">Sueldo</button>
+            <button type="button" role="tab" data-tool-switch data-open-tool="itbis" aria-selected="false">ITBIS</button>
+            <button type="button" role="tab" data-tool-switch data-open-tool="compare" aria-selected="false">Comparador</button>
+            <button type="button" role="tab" data-tool-switch data-open-tool="savings" aria-selected="false">Ahorro</button>
+            <button type="button" role="tab" data-tool-switch data-open-tool="hourly" aria-selected="false">Horas</button>
+            <button type="button" role="tab" data-tool-switch data-open-tool="vacation" aria-selected="false">Vacaciones</button>
+            <button type="button" role="tab" data-tool-switch data-open-tool="withholding" aria-selected="false">Retenciones</button>
+          </div>
+        </div>
+
+        <section class="tool-panel loan-panel print-area" id="prestamos" data-tool-panel="loan" role="tabpanel" aria-labelledby="loan-title">
+          <div class="calculator-intro">
+            <span class="panel-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M7 9h10M7 15h3M16 13v4M14 15h4"></path></svg></span>
+            <div><h3 id="loan-title">Préstamo avanzado</h3><p>Pon los datos del préstamo y te mostramos la cuota y el total.</p></div>
+          </div>
+          <form class="calc-form loan-form" data-form="loan" novalidate>
+            <label><span>Monto del préstamo</span><input name="amount" type="number" min="1" max="100000000" step="1000" inputmode="decimal" placeholder="500000" required><small data-error-for="amount"></small></label>
+            <label><span>Inicial</span><input name="downPayment" type="number" min="0" max="100000000" step="1000" inputmode="decimal" placeholder="0"><small data-error-for="downPayment"></small></label>
+            <label><span>Tasa anual (%)</span><input name="rate" type="number" min="0" max="80" step="0.01" inputmode="decimal" placeholder="15" required><small data-error-for="rate"></small></label>
+            <label><span>Plazo</span><input name="term" type="number" min="1" max="480" step="1" inputmode="numeric" placeholder="60" required><small data-error-for="term"></small></label>
+            <label><span>Unidad</span><select name="termUnit"><option value="months">Meses</option><option value="years">Años</option></select></label>
+            <button class="button primary" type="submit">Calcular préstamo</button>
           </form>
+
+          <div class="loan-output" data-loan-output hidden>
+            <div class="result-layout">
+              <div class="loan-summary">
+                <div class="results loan-results" data-results="loan"></div>
+                <details class="explanation">
+                  <summary>Cómo se calcula</summary>
+                  <div data-explanation="loan"></div>
+                </details>
+              </div>
+              <div class="chart-panel">
+                <div class="chart-heading"><strong>Capital e intereses</strong><span>Distribución estimada</span></div>
+                <canvas width="420" height="260" data-loan-chart aria-label="Gráfica de capital, intereses y balance"></canvas>
+              </div>
+            </div>
+            <div class="amortization-header">
+              <div><h4>Tabla de amortización</h4><p>Detalle de capital, interés y balance por cuota.</p></div>
+              <div class="action-row">
+                <button class="button secondary" type="button" data-toggle-amortization>Expandir tabla</button>
+                <button class="button secondary" type="button" data-download-csv>Descargar CSV</button>
+                <button class="button text-button" type="button" data-print-result>Imprimir</button>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Cuota</th><th>Pago</th><th>Capital</th><th>Interés</th><th>Balance restante</th></tr></thead>
+                <tbody data-amortization-table></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section class="tool-panel" id="comparador" data-tool-panel="compare" role="tabpanel" aria-labelledby="compare-title" hidden>
+          <div class="calculator-intro"><span class="panel-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 7h13M17 4l3 3-3 3M17 17H4M7 14l-3 3 3 3"></path></svg></span><div><h3 id="compare-title">Comparador de préstamos</h3><p>Compara dos préstamos y mira cuál termina costándote menos.</p></div></div>
+          <form class="compare-grid" data-form="compare" novalidate>
+            <fieldset><legend>Préstamo A</legend><label><span>Monto</span><input name="aAmount" type="number" min="1" step="1000" inputmode="decimal" required><small data-error-for="aAmount"></small></label><label><span>Inicial</span><input name="aDownPayment" type="number" min="0" step="1000" inputmode="decimal"><small data-error-for="aDownPayment"></small></label><label><span>Interés anual (%)</span><input name="aRate" type="number" min="0" max="80" step="0.01" inputmode="decimal" required><small data-error-for="aRate"></small></label><label><span>Plazo en meses</span><input name="aMonths" type="number" min="1" max="480" step="1" inputmode="numeric" required><small data-error-for="aMonths"></small></label></fieldset>
+            <fieldset><legend>Préstamo B</legend><label><span>Monto</span><input name="bAmount" type="number" min="1" step="1000" inputmode="decimal" required><small data-error-for="bAmount"></small></label><label><span>Inicial</span><input name="bDownPayment" type="number" min="0" step="1000" inputmode="decimal"><small data-error-for="bDownPayment"></small></label><label><span>Interés anual (%)</span><input name="bRate" type="number" min="0" max="80" step="0.01" inputmode="decimal" required><small data-error-for="bRate"></small></label><label><span>Plazo en meses</span><input name="bMonths" type="number" min="1" max="480" step="1" inputmode="numeric" required><small data-error-for="bMonths"></small></label></fieldset>
+            <button class="button primary" type="submit">Comparar préstamos</button>
+          </form>
+          <div class="results" data-results="compare"></div>
+          <div class="explanation" data-explanation="compare"></div>
+        </section>
+
+        <section class="tool-panel mini-calculator" id="calc-sueldo" data-tool-panel="salary" role="tabpanel" aria-labelledby="salary-title" hidden>
+          <div class="calculator-intro"><span class="panel-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7h14a2 2 0 0 1 2 2v9H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h13"></path><path d="M15 11h5v4h-5a2 2 0 0 1 0-4Z"></path></svg></span><div><h3 id="salary-title">Sueldo neto RD</h3><p>Estima cuánto te quedaría después de AFP, SFS e ISR.</p></div></div>
+          <form class="calc-form simple-form" data-form="salary" novalidate><label><span>Salario bruto mensual</span><input name="salary" type="number" min="1" step="1000" inputmode="decimal" required><small data-error-for="salary"></small></label><label><span>Otros ingresos</span><input name="otherIncome" type="number" min="0" step="1000" inputmode="decimal"><small data-error-for="otherIncome"></small></label><button class="button primary" type="submit">Calcular sueldo</button></form>
           <div class="results" data-results="salary"></div>
-        </article>
+        </section>
 
-        <article class="mini-calculator" id="calc-itbis">
-          <h3>ITBIS</h3>
-          <form class="calc-form" data-form="itbis" novalidate>
-            <label><span>Monto</span><input name="amount" type="number" min="1" step="100" required><small data-error-for="amount"></small></label>
-            <label><span>Modo</span><select name="mode"><option value="add">Agregar 18%</option><option value="extract">Extraer 18%</option></select></label>
-            <button class="button primary" type="submit">Calcular ITBIS</button>
-          </form>
+        <section class="tool-panel mini-calculator" id="calc-itbis" data-tool-panel="itbis" role="tabpanel" aria-labelledby="itbis-title" hidden>
+          <div class="calculator-intro"><span class="panel-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Z"></path><path d="m9 9 6 6M15 9h.01M9 15h.01"></path></svg></span><div><h3 id="itbis-title">ITBIS</h3><p>Agrega o quita el 18% de cualquier monto.</p></div></div>
+          <form class="calc-form simple-form" data-form="itbis" novalidate><label><span>Monto</span><input name="amount" type="number" min="1" step="100" inputmode="decimal" required><small data-error-for="amount"></small></label><label><span>Modo</span><select name="mode"><option value="add">Agregar 18%</option><option value="extract">Extraer 18%</option></select></label><button class="button primary" type="submit">Calcular ITBIS</button></form>
           <div class="results" data-results="itbis"></div>
-        </article>
+        </section>
 
-        <article class="mini-calculator" id="calc-retenciones">
-          <h3>Retenciones</h3>
-          <form class="calc-form" data-form="withholding" novalidate>
-            <label><span>Monto factura</span><input name="amount" type="number" min="1" step="100" required><small data-error-for="amount"></small></label>
-            <label><span>Retencion (%)</span><input name="rate" type="number" min="0" max="100" step="0.01" value="10" required><small data-error-for="rate"></small></label>
-            <button class="button primary" type="submit">Calcular retencion</button>
-          </form>
+        <section class="tool-panel mini-calculator" id="calc-retenciones" data-tool-panel="withholding" role="tabpanel" aria-labelledby="withholding-title" hidden>
+          <div class="calculator-intro"><span class="panel-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5z"></path><path d="M8 8h8M8 16h8M9 12h.01M15 12h.01M10 15l4-6"></path></svg></span><div><h3 id="withholding-title">Retenciones</h3><p>Calcula la retención y el monto neto de una factura.</p></div></div>
+          <form class="calc-form simple-form" data-form="withholding" novalidate><label><span>Monto factura</span><input name="amount" type="number" min="1" step="100" inputmode="decimal" required><small data-error-for="amount"></small></label><label><span>Retención (%)</span><input name="rate" type="number" min="0" max="100" step="0.01" inputmode="decimal" value="10" required><small data-error-for="rate"></small></label><button class="button primary" type="submit">Calcular retención</button></form>
           <div class="results" data-results="withholding"></div>
-        </article>
+        </section>
 
-        <article class="mini-calculator" id="calc-horas">
-          <h3>Pago por hora</h3>
-          <form class="calc-form" data-form="hourly" novalidate>
-            <label><span>Sueldo mensual</span><input name="salary" type="number" min="1" step="1000" required><small data-error-for="salary"></small></label>
-            <label><span>Horas semanales</span><input name="weeklyHours" type="number" min="1" max="80" step="1" value="44" required><small data-error-for="weeklyHours"></small></label>
-            <label><span>Horas extras</span><input name="overtimeHours" type="number" min="0" max="200" step="1"><small data-error-for="overtimeHours"></small></label>
-            <button class="button primary" type="submit">Calcular horas</button>
-          </form>
+        <section class="tool-panel mini-calculator" id="calc-horas" data-tool-panel="hourly" role="tabpanel" aria-labelledby="hourly-title" hidden>
+          <div class="calculator-intro"><span class="panel-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg></span><div><h3 id="hourly-title">Pago por hora</h3><p>Convierte tu sueldo mensual e incluye horas extras.</p></div></div>
+          <form class="calc-form simple-form" data-form="hourly" novalidate><label><span>Sueldo mensual</span><input name="salary" type="number" min="1" step="1000" inputmode="decimal" required><small data-error-for="salary"></small></label><label><span>Horas semanales</span><input name="weeklyHours" type="number" min="1" max="80" step="1" inputmode="numeric" value="44" required><small data-error-for="weeklyHours"></small></label><label><span>Horas extras</span><input name="overtimeHours" type="number" min="0" max="200" step="1" inputmode="numeric"><small data-error-for="overtimeHours"></small></label><button class="button primary" type="submit">Calcular horas</button></form>
           <div class="results" data-results="hourly"></div>
-        </article>
+        </section>
 
-        <article class="mini-calculator" id="calc-vacaciones">
-          <h3>Vacaciones</h3>
-          <form class="calc-form" data-form="vacation" novalidate>
-            <label><span>Salario mensual</span><input name="salary" type="number" min="1" step="1000" required><small data-error-for="salary"></small></label>
-            <label><span>Dias de vacaciones</span><input name="days" type="number" min="1" max="60" step="1" value="14" required><small data-error-for="days"></small></label>
-            <button class="button primary" type="submit">Calcular vacaciones</button>
-          </form>
+        <section class="tool-panel mini-calculator" id="calc-vacaciones" data-tool-panel="vacation" role="tabpanel" aria-labelledby="vacation-title" hidden>
+          <div class="calculator-intro"><span class="panel-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 17h18M5 17l3-8 4 8 3-11 4 11"></path><path d="M4 21h16"></path></svg></span><div><h3 id="vacation-title">Vacaciones</h3><p>Estima el pago con un salario diario referencial.</p></div></div>
+          <form class="calc-form simple-form" data-form="vacation" novalidate><label><span>Salario mensual</span><input name="salary" type="number" min="1" step="1000" inputmode="decimal" required><small data-error-for="salary"></small></label><label><span>Días de vacaciones</span><input name="days" type="number" min="1" max="60" step="1" inputmode="numeric" value="14" required><small data-error-for="days"></small></label><button class="button primary" type="submit">Calcular vacaciones</button></form>
           <div class="results" data-results="vacation"></div>
-        </article>
+        </section>
 
-        <article class="mini-calculator" id="calc-ahorro">
-          <h3>Meta de ahorro</h3>
-          <form class="calc-form" data-form="savings" novalidate>
-            <label><span>Monto inicial</span><input name="initial" type="number" min="0" step="1000"><small data-error-for="initial"></small></label>
-            <label><span>Aporte mensual</span><input name="monthly" type="number" min="0" step="500"><small data-error-for="monthly"></small></label>
-            <label><span>Tasa anual (%)</span><input name="rate" type="number" min="0" max="80" step="0.01"><small data-error-for="rate"></small></label>
-            <label><span>Plazo en años</span><input name="years" type="number" min="1" max="60" step="1" required><small data-error-for="years"></small></label>
-            <button class="button primary" type="submit">Calcular ahorro</button>
-          </form>
+        <section class="tool-panel mini-calculator" id="calc-ahorro" data-tool-panel="savings" role="tabpanel" aria-labelledby="savings-title" hidden>
+          <div class="calculator-intro"><span class="panel-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"></circle><path d="M12 8v8M9.5 10h4a1.5 1.5 0 0 1 0 3h-3a1.5 1.5 0 0 0 0 3h4"></path></svg></span><div><h3 id="savings-title">Meta de ahorro</h3><p>Mira cuánto podrías acumular aportando cada mes.</p></div></div>
+          <form class="calc-form simple-form" data-form="savings" novalidate><label><span>Monto inicial</span><input name="initial" type="number" min="0" step="1000" inputmode="decimal"><small data-error-for="initial"></small></label><label><span>Aporte mensual</span><input name="monthly" type="number" min="0" step="500" inputmode="decimal"><small data-error-for="monthly"></small></label><label><span>Tasa anual (%)</span><input name="rate" type="number" min="0" max="80" step="0.01" inputmode="decimal"><small data-error-for="rate"></small></label><label><span>Plazo en años</span><input name="years" type="number" min="1" max="60" step="1" inputmode="numeric" required><small data-error-for="years"></small></label><button class="button primary" type="submit">Calcular ahorro</button></form>
           <div class="results" data-results="savings"></div>
-        </article>
-      </section>
-
-      <section class="history-section" id="historial" aria-labelledby="history-title">
-        <div class="section-heading compact">
-          <p class="eyebrow">Historial</p>
-          <h2 id="history-title">Calculos guardados en este navegador.</h2>
-        </div>
-        <div class="history-actions">
-          <button class="button secondary" type="button" data-clear-history>Limpiar historial</button>
-        </div>
-        <div class="history-list" data-history-list></div>
+        </section>
       </section>
     </main>
 
     <footer class="site-footer">
-      <div>
-        <a class="brand" href="#inicio">
-          <span class="brand-mark" aria-hidden="true">RD</span>
-          <span>CalculaRD</span>
-        </a>
-        <p>Herramientas referenciales. No sustituye asesoria bancaria, contable o legal.</p>
-      </div>
-      <nav aria-label="Paginas legales">
-        <a href="/sobre.html">Sobre</a>
-        <a href="/privacidad.html">Privacidad</a>
-        <a href="/terminos.html">Terminos</a>
-        <a href="/disclaimer.html">Disclaimer</a>
-        <a href="/contacto.html">Contacto</a>
-      </nav>
+      <div><a class="brand" href="#inicio"><span>Calcula</span><strong>RD</strong></a><p>Resultados referenciales para organizar mejor tus decisiones.</p></div>
+      <nav aria-label="Páginas legales"><a href="/sobre.html">Sobre</a><a href="/privacidad.html">Privacidad</a><a href="/terminos.html">Términos</a><a href="/disclaimer.html">Disclaimer</a><a href="/contacto.html">Contacto</a></nav>
     </footer>
 
-    <script type="module" src="/js/app.js?v=4"></script>
+    <div class="drawer-backdrop" data-history-overlay aria-hidden="true"></div>
+    <aside class="history-drawer" data-history-drawer role="dialog" aria-modal="true" aria-labelledby="history-title" aria-hidden="true" inert>
+      <div class="history-drawer-header">
+        <div><p>Guardado en este navegador</p><h2 id="history-title">Historial</h2></div>
+        <button class="icon-button drawer-close" type="button" data-history-close aria-label="Cerrar historial"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
+      </div>
+      <div class="history-list" data-history-list></div>
+      <div class="history-drawer-footer"><button class="button danger-button" type="button" data-clear-history>Limpiar historial</button></div>
+    </aside>
+
+    <script type="module" src="/js/app.js?v=5"></script>
   </body>
 </html>

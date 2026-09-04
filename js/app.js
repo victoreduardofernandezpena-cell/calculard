@@ -27,11 +27,13 @@ const numberFormat = new Intl.NumberFormat("es-DO", {
 const state = {
   lastLoan: null,
   showFullAmortization: false,
-  favorites: readStorage(FAVORITES_KEY, [])
+  favorites: readStorage(FAVORITES_KEY, []),
+  activeTool: "loan",
+  historyOpener: null
 };
 
 const calculatorLabels = {
-  loan: "Prestamo",
+  loan: "Préstamo",
   compare: "Comparador",
   salary: "Sueldo neto",
   itbis: "ITBIS",
@@ -151,7 +153,7 @@ function drawLoanChart(summary) {
   context.fillStyle = themeStyles.getPropertyValue("--muted").trim();
   context.font = "15px Segoe UI";
   if (!summary) {
-    context.fillText("Calcula un prestamo para ver la visualizacion.", 34, 132);
+    context.fillText("Calcula un préstamo para ver la visualización.", 34, 132);
     return;
   }
 
@@ -227,7 +229,7 @@ function handleLoanSubmit(event) {
   event.preventDefault();
   const form = event.currentTarget;
   const { valid, values } = validateForm(form, {
-    amount: { required: true, number: true, min: 1, max: 100000000, minMessage: "Monto debe ser mayor que RD$0." },
+    amount: { required: true, number: true, min: 1, max: 100000000, minMessage: "El monto debe ser mayor que RD$0." },
     downPayment: { number: true, min: 0, max: 100000000 },
     rate: { required: true, number: true, min: 0, max: 80, maxMessage: "Usa una tasa menor o igual a 80%." },
     term: { required: true, number: true, min: 1, max: 480 }
@@ -244,18 +246,19 @@ function handleLoanSubmit(event) {
 
   state.lastLoan = summary;
   renderResults("loan", [
+    { label: "Tu cuota estimada", value: money(summary.payment), variant: "primary-result" },
     { label: "Monto financiado", value: money(summary.financed) },
-    { label: "Pago mensual", value: money(summary.payment), variant: "highlight" },
-    { label: "Total pagado", value: money(summary.totalPaid) },
     { label: "Intereses", value: money(summary.interest), variant: "warning" },
-    { label: "Porcentaje a intereses", value: percent(summary.interestShare) }
+    { label: "Total", value: money(summary.totalPaid) },
+    { label: "Tasa anual", value: percent(summary.rate) }
   ]);
   renderExplanation("loan", `
-    <strong>Como obtuvimos este resultado</strong><br>
     Monto financiado: ${money(summary.financed)}. Tasa anual: ${percent(summary.rate)}.
     Tasa mensual: ${percent(summary.rate / 12)}. Plazo: ${summary.months} meses.
     La cuota estimada queda en ${money(summary.payment)} usando pagos mensuales fijos.
   `);
+  const output = document.querySelector("[data-loan-output]");
+  if (output) output.hidden = false;
   renderAmortization(summary);
   drawLoanChart(summary);
   addHistory("loan", { amount: summary.amount, downPayment: summary.downPayment, rate: summary.rate, term: values.term, termUnit: values.termUnit }, `${money(summary.payment)} mensual`);
@@ -289,11 +292,11 @@ function handleCompareSubmit(event) {
     { label: "Ahorro estimado", value: money(savings), variant: "highlight" }
   ]);
   renderExplanation("compare", `
-    <strong>Resultado de la comparacion</strong><br>
-    El prestamo ${winner} te permite ahorrar ${money(savings)} frente al prestamo ${winner === "A" ? "B" : "A"}.
+    <strong>Resultado de la comparación</strong><br>
+    El préstamo ${winner} te permite ahorrar ${money(savings)} frente al préstamo ${winner === "A" ? "B" : "A"}.
     La diferencia sale de comparar total pagado, intereses y duracion. Una cuota menor no siempre gana si el plazo alarga demasiado los intereses.
   `);
-  addHistory("compare", values, `Ahorro ${money(savings)} con prestamo ${winner}`);
+  addHistory("compare", values, `Ahorro ${money(savings)} con préstamo ${winner}`);
 }
 
 function calculateAnnualIsr(taxableAnnualSalary) {
@@ -316,7 +319,7 @@ function handleSimpleSubmit(event) {
 }
 
 function getRules(type) {
-  const baseMoney = { required: true, number: true, min: 1, minMessage: "Monto debe ser mayor que RD$0." };
+  const baseMoney = { required: true, number: true, min: 1, minMessage: "El monto debe ser mayor que RD$0." };
   return {
     salary: { salary: baseMoney, otherIncome: { number: true, min: 0 } },
     itbis: { amount: baseMoney },
@@ -361,7 +364,7 @@ function calculateSimple(type, values) {
     const retained = amount * (Number(values.rate) / 100);
     return [
       { label: "Monto factura", value: money(amount) },
-      { label: "Retencion", value: money(retained), variant: "warning" },
+      { label: "Retención", value: money(retained), variant: "warning" },
       { label: "Neto a recibir", value: money(amount - retained), variant: "highlight" }
     ];
   }
@@ -406,7 +409,7 @@ function downloadLoanCsv() {
   if (!state.lastLoan) return;
   const rows = amortizationRows(state.lastLoan);
   const csvRows = [
-    ["numero de cuota", "cuota", "capital", "interes", "balance restante"],
+    ["número de cuota", "cuota", "capital", "interés", "balance restante"],
     ...rows.map((row) => [row.month, row.payment.toFixed(2), row.capital.toFixed(2), row.interest.toFixed(2), row.balance.toFixed(2)])
   ];
   const blob = new Blob([csvRows.map((row) => row.join(",")).join("\n")], { type: "text/csv;charset=utf-8" });
@@ -420,30 +423,48 @@ function downloadLoanCsv() {
   URL.revokeObjectURL(link.href);
 }
 
+function formatHistoryDate(date) {
+  const now = new Date();
+  const isToday = date.toDateString() === now.toDateString();
+  const time = date.toLocaleTimeString("es-DO", { hour: "2-digit", minute: "2-digit" });
+  return isToday ? `Hoy · ${time}` : `${date.toLocaleDateString("es-DO")} · ${time}`;
+}
+
+function formatHistoryInputs(inputs) {
+  return Object.entries(inputs)
+    .filter(([, value]) => value !== "")
+    .slice(0, 3)
+    .map(([key, value]) => {
+      const normalizedKey = key.toLowerCase();
+      if (/(amount|salary|income|initial|monthly|downpayment)/.test(normalizedKey)) return money(Number(value));
+      if (normalizedKey.includes("rate")) return percent(Number(value));
+      return String(value);
+    })
+    .join(" · ");
+}
+
 function renderHistory() {
   const target = document.querySelector("[data-history-list]");
   if (!target) return;
   const history = readStorage(HISTORY_KEY, []);
 
   if (!history.length) {
-    target.innerHTML = `<div class="empty-state">Aun no tienes calculos guardados.</div>`;
+    target.innerHTML = `<div class="empty-state">Aún no has hecho ningún cálculo.</div>`;
     return;
   }
 
   target.innerHTML = history.map((item) => {
     const date = new Date(item.savedAt);
-    const mainData = Object.values(item.inputs).filter((value) => value !== "").slice(0, 4).join(" · ");
     return `
       <article class="history-item">
-        <div>
+        <div class="history-item-heading">
           <strong>${escapeHtml(item.label)}</strong>
-          <span>${escapeHtml(mainData)}</span>
-          <span>${date.toLocaleDateString("es-DO")} ${date.toLocaleTimeString("es-DO", { hour: "2-digit", minute: "2-digit" })}</span>
-          <span>${escapeHtml(item.result)}</span>
+          <time datetime="${escapeHtml(item.savedAt)}">${escapeHtml(formatHistoryDate(date))}</time>
         </div>
+        <span class="history-item-result">${escapeHtml(item.result)}</span>
+        <span class="history-item-inputs">${escapeHtml(formatHistoryInputs(item.inputs))}</span>
         <div class="history-item-actions">
-          <button type="button" data-history-view="${item.id}">Ver nuevamente</button>
-          <button type="button" data-history-repeat="${item.id}">Repetir calculo</button>
+          <button type="button" data-history-repeat="${item.id}">Usar de nuevo</button>
           <button type="button" data-history-delete="${item.id}">Eliminar</button>
         </div>
       </article>
@@ -452,12 +473,36 @@ function renderHistory() {
 }
 
 function initializeHistory() {
+  const drawer = document.querySelector("[data-history-drawer]");
   const section = document.querySelector("[data-history-list]");
+
+  function openHistory(event) {
+    state.historyOpener = event?.currentTarget || document.activeElement;
+    renderHistory();
+    document.body.classList.add("history-open");
+    drawer?.removeAttribute("inert");
+    drawer?.setAttribute("aria-hidden", "false");
+    document.querySelector("[data-history-close]")?.focus();
+  }
+
+  function closeHistory() {
+    document.body.classList.remove("history-open");
+    drawer?.setAttribute("inert", "");
+    drawer?.setAttribute("aria-hidden", "true");
+    if (state.historyOpener instanceof HTMLElement) state.historyOpener.focus();
+  }
+
+  document.querySelectorAll("[data-history-open]").forEach((button) => {
+    button.addEventListener("click", openHistory);
+  });
+  document.querySelector("[data-history-close]")?.addEventListener("click", closeHistory);
+  document.querySelector("[data-history-overlay]")?.addEventListener("click", closeHistory);
+
   section?.addEventListener("click", (event) => {
     const button = event.target.closest("button");
     if (!button) return;
     const history = readStorage(HISTORY_KEY, []);
-    const id = button.dataset.historyDelete || button.dataset.historyRepeat || button.dataset.historyView;
+    const id = button.dataset.historyDelete || button.dataset.historyRepeat;
     const item = history.find((entry) => entry.id === id);
 
     if (button.dataset.historyDelete) {
@@ -467,18 +512,14 @@ function initializeHistory() {
     }
 
     if (!item) return;
-
-    if (button.dataset.historyView) {
-      button.closest(".history-item")?.scrollIntoView({ behavior: "smooth", block: "center" });
-      return;
-    }
-
     const form = document.querySelector(repeatTargets[item.type]);
     if (!form) return;
+
+    openTool(item.type, { scroll: true });
     Object.entries(item.inputs).forEach(([name, value]) => {
       if (form.elements[name]) form.elements[name].value = value;
     });
-    form.scrollIntoView({ behavior: "smooth", block: "start" });
+    closeHistory();
   });
 
   document.querySelector("[data-clear-history]")?.addEventListener("click", () => {
@@ -486,22 +527,102 @@ function initializeHistory() {
     renderHistory();
   });
 
+  document.addEventListener("keydown", (event) => {
+    if (!document.body.classList.contains("history-open") || !drawer) return;
+    if (event.key === "Escape") {
+      closeHistory();
+      return;
+    }
+    if (event.key !== "Tab") return;
+
+    const focusable = [...drawer.querySelectorAll("button:not([disabled]), a[href], input, select")];
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable.at(-1);
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  });
+
   renderHistory();
+}
+
+function openTool(type, { scroll = false } = {}) {
+  const panels = [...document.querySelectorAll("[data-tool-panel]")];
+  const activePanel = panels.find((panel) => panel.dataset.toolPanel === type);
+  if (!activePanel) return;
+
+  state.activeTool = type;
+  panels.forEach((panel) => {
+    panel.hidden = panel !== activePanel;
+  });
+
+  document.querySelectorAll("[data-tool-switch]").forEach((button) => {
+    const active = button.dataset.openTool === type;
+    button.setAttribute("aria-selected", String(active));
+    button.tabIndex = active ? 0 : -1;
+  });
+
+  if (scroll) {
+    requestAnimationFrame(() => activePanel.scrollIntoView({ behavior: "smooth", block: "start" }));
+  }
+}
+
+function initializeToolWorkspace() {
+  const panels = [...document.querySelectorAll("[data-tool-panel]")];
+  const tabs = [...document.querySelectorAll("[data-tool-switch]")];
+
+  tabs.forEach((tab) => {
+    const panel = panels.find((item) => item.dataset.toolPanel === tab.dataset.openTool);
+    if (panel) tab.setAttribute("aria-controls", panel.id);
+
+    tab.addEventListener("keydown", (event) => {
+      if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+      event.preventDefault();
+      const currentIndex = tabs.indexOf(tab);
+      const direction = event.key === "ArrowRight" ? 1 : -1;
+      const nextTab = tabs[(currentIndex + direction + tabs.length) % tabs.length];
+      openTool(nextTab.dataset.openTool);
+      nextTab.focus();
+    });
+  });
+
+  document.addEventListener("click", (event) => {
+    const trigger = event.target.closest("[data-open-tool]");
+    if (!trigger) return;
+    if (trigger.matches("a")) event.preventDefault();
+    openTool(trigger.dataset.openTool, { scroll: !trigger.hasAttribute("data-tool-switch") });
+  });
+
+  const panelFromHash = panels.find((panel) => `#${panel.id}` === window.location.hash);
+  openTool(panelFromHash?.dataset.toolPanel || "loan");
+}
+
+function normalizeSearchText(value) {
+  return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 }
 
 function initializeSearch() {
   const input = document.querySelector("[data-tool-search]");
   const cards = [...document.querySelectorAll("[data-tool-card]")];
+  const groups = [...document.querySelectorAll("[data-tool-group]")];
   const empty = document.querySelector("[data-search-empty]");
 
   input?.addEventListener("input", () => {
-    const query = input.value.trim().toLowerCase();
+    const query = normalizeSearchText(input.value.trim());
     let visible = 0;
     cards.forEach((card) => {
-      const text = `${card.dataset.title} ${card.dataset.category} ${card.dataset.keywords}`.toLowerCase();
+      const text = normalizeSearchText(`${card.dataset.toolKey} ${card.dataset.title} ${card.dataset.category} ${card.dataset.keywords}`);
       const match = text.includes(query);
       card.hidden = !match;
       if (match) visible += 1;
+    });
+    groups.forEach((group) => {
+      group.hidden = !group.querySelector("[data-tool-card]:not([hidden])");
     });
     if (empty) empty.hidden = visible > 0;
   });
@@ -510,27 +631,33 @@ function initializeSearch() {
 function initializeFavorites() {
   const buttons = [...document.querySelectorAll("[data-favorite-toggle]")];
   const grid = document.querySelector("[data-favorites-grid]");
-  const empty = document.querySelector("[data-favorites-empty]");
+  const section = document.querySelector("[data-favorites-section]");
 
   function paint() {
     buttons.forEach((button) => {
       const active = state.favorites.includes(button.dataset.favoriteToggle);
-      button.textContent = active ? "★" : "☆";
       button.setAttribute("aria-pressed", String(active));
+      const cardTitle = button.closest("[data-tool-card]")?.dataset.title || "esta herramienta";
+      button.setAttribute("aria-label", active
+        ? `Quitar ${cardTitle} de favoritos`
+        : `Marcar ${cardTitle} como favorito`);
     });
 
-    if (!grid || !empty) return;
+    if (!grid || !section) return;
     const cards = [...document.querySelectorAll("[data-tool-card]")]
       .filter((card) => state.favorites.includes(card.dataset.toolKey));
-    empty.hidden = cards.length > 0;
-    grid.innerHTML = cards.map((card) => `
-      <article class="tool-card">
-        <span class="tool-icon" aria-hidden="true">${escapeHtml(card.querySelector(".tool-icon")?.textContent || "")}</span>
-        <h3>${escapeHtml(card.dataset.title)}</h3>
-        <p>${escapeHtml(card.querySelector("p")?.textContent || "")}</p>
-        <a class="tool-link" href="${card.querySelector("a")?.getAttribute("href")}">Abrir →</a>
-      </article>
-    `).join("");
+    section.hidden = cards.length === 0;
+    grid.innerHTML = cards.map((card) => {
+      const icon = card.querySelector(".tool-icon")?.outerHTML || "";
+      const tool = card.querySelector("[data-open-tool]")?.dataset.openTool || "loan";
+      return `
+        <button class="favorite-tool" type="button" data-open-tool="${escapeHtml(tool)}">
+          ${icon}
+          <span><strong>${escapeHtml(card.dataset.title)}</strong><small>${escapeHtml(card.dataset.category)}</small></span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+        </button>
+      `;
+    }).join("");
   }
 
   buttons.forEach((button) => {
@@ -574,6 +701,7 @@ function initializePwa() {
 initializeTheme();
 initializeSearch();
 initializeFavorites();
+initializeToolWorkspace();
 initializeHistory();
 initializeForms();
 initializePwa();
