@@ -1,0 +1,18 @@
+{
+  "name": "CalculaRD - Herramientas financieras RD",
+  "short_name": "CalculaRD",
+  "description": "Calculadoras financieras para prestamos, impuestos, sueldo y ahorro en Republica Dominicana.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#071412",
+  "theme_color": "#073b3a",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
