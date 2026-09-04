@@ -142,9 +142,13 @@ function drawLoanChart(summary) {
   const canvas = document.querySelector("[data-loan-chart]");
   if (!canvas) return;
   const context = canvas.getContext("2d");
+  const themeStyles = getComputedStyle(document.documentElement);
+  const chartCapital = themeStyles.getPropertyValue("--chart-capital").trim() || "#3B82F6";
+  const chartInterest = themeStyles.getPropertyValue("--chart-interest").trim() || "#38BDF8";
+  const chartBalance = themeStyles.getPropertyValue("--chart-balance").trim() || "#2563EB";
   context.clearRect(0, 0, canvas.width, canvas.height);
 
-  context.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--muted").trim();
+  context.fillStyle = themeStyles.getPropertyValue("--muted").trim();
   context.font = "15px Segoe UI";
   if (!summary) {
     context.fillText("Calcula un prestamo para ver la visualizacion.", 34, 132);
@@ -159,29 +163,33 @@ function drawLoanChart(summary) {
 
   context.beginPath();
   context.moveTo(centerX, centerY);
-  context.fillStyle = "#2fd6a3";
+  context.fillStyle = chartCapital;
   context.arc(centerX, centerY, radius, -Math.PI / 2, -Math.PI / 2 + capitalAngle);
   context.fill();
 
   context.beginPath();
   context.moveTo(centerX, centerY);
-  context.fillStyle = "#f2c14e";
+  context.fillStyle = chartInterest;
   context.arc(centerX, centerY, radius, -Math.PI / 2 + capitalAngle, Math.PI * 1.5);
   context.fill();
 
-  context.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--text").trim();
+  context.fillStyle = themeStyles.getPropertyValue("--text").trim();
   context.font = "700 18px Segoe UI";
   context.fillText(`Capital ${Math.round((summary.financed / total) * 100 || 0)}%`, 220, 84);
   context.fillText(`Intereses ${Math.round(summary.interestShare)}%`, 220, 124);
   context.font = "14px Segoe UI";
-  context.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--muted").trim();
-  context.fillText("Balance baja cada mes con la porcion de capital.", 220, 166);
+  context.fillStyle = themeStyles.getPropertyValue("--muted").trim();
+  context.fillText("Balance baja cada mes con la", 220, 158);
+  context.fillText("porcion de capital.", 220, 178);
 
   const rows = amortizationRows(summary).filter((_, index) => index % Math.ceil(summary.months / 8) === 0);
   const startX = 34;
   const startY = 226;
   const width = 350;
-  context.strokeStyle = "#2fd6a3";
+  context.strokeStyle = chartBalance;
+  context.lineWidth = 3;
+  context.lineCap = "round";
+  context.lineJoin = "round";
   context.beginPath();
   rows.forEach((row, index) => {
     const x = startX + (index / Math.max(rows.length - 1, 1)) * width;
@@ -569,3 +577,5 @@ initializeFavorites();
 initializeHistory();
 initializeForms();
 initializePwa();
+
+document.addEventListener("calculard:themechange", () => drawLoanChart(state.lastLoan));

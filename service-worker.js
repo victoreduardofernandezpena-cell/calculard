@@ -1,4 +1,4 @@
-const CACHE_NAME = "calculard-static-v3";
+const CACHE_NAME = "calculard-static-v4";
 const STATIC_ASSETS = [
   "/",
   "/index.html",

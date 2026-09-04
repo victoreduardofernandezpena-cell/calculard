@@ -25,4 +25,6 @@ function applyTheme(theme) {
   } catch (error) {
     // Theme persistence is optional.
   }
+
+  document.dispatchEvent(new CustomEvent("calculard:themechange", { detail: { theme } }));
 }
